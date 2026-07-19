@@ -178,7 +178,7 @@ export function WifiMissionScene() {
         }, 800);
         break;
     }
-  }, [phase, play, addCompletedMission, unlockWifiCard, completeMission, transitionToScene, setMission2Started]);
+  }, [phase, play, addCompletedMission, unlockWifiCard, completeMission, transitionToScene]);
 
   const handleHotspotClick = useCallback((hotspotId: string) => {
     play("ui-confirm");

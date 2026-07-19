@@ -211,7 +211,7 @@ export function ShowerMissionScene() {
       setCurrentShowerImage(1);
       setRepairPhase("remove-head");
     }, 1500);
-  }, [repairPhase, play, showDialog]);
+  }, [repairPhase, play, showDialog, setCurrentShowerImage, setRepairPhase]);
 
   const handleRemoveHead = useCallback(() => {
     if (repairPhase !== "remove-head") return;
@@ -244,7 +244,7 @@ export function ShowerMissionScene() {
         setSoakingProgress(0);
       }, 3000);
     }, 1000);
-  }, [repairPhase, play, stop, showDialog]);
+  }, [repairPhase, play, stop, showDialog, setCurrentShowerImage, setRepairPhase]);
 
   const handleReinstall = useCallback(() => {
     if (repairPhase !== "reinstall") return;
@@ -253,7 +253,7 @@ export function ShowerMissionScene() {
     setCurrentShowerImage(1);
     setRepairPhase("test");
     showDialog("点击花洒试试吧！");
-  }, [repairPhase, play, showDialog]);
+  }, [repairPhase, play, showDialog, setCurrentShowerImage, setRepairPhase]);
 
   const handleTest = useCallback(() => {
     if (repairPhase !== "test") return;
@@ -282,7 +282,7 @@ export function ShowerMissionScene() {
         }, 2000);
       }, 500);
     }, 2000);
-  }, [repairPhase, play, stop, setWaterSpraying, setWaterFixed, attemptRepairStep, completeMission, unlockShowerCard, saveManager, showDialog]);
+  }, [repairPhase, play, stop, setWaterSpraying, setWaterFixed, attemptRepairStep, completeMission, unlockShowerCard, saveManager, showDialog, setRepairPhase]);
 
   const handleComplete = useCallback(() => {
     setFadeToBlack(true);

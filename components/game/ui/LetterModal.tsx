@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameAudio } from "@/hooks/useGameAudio";
 
@@ -36,13 +36,13 @@ export function LetterModal({ isOpen, onClose, autoOpen = false }: LetterModalPr
     onClose();
   };
 
-  const handleOpenLetter = () => {
+  const handleOpenLetter = useCallback(() => {
     play("ui-confirm");
     setIsOpening(true);
     setTimeout(() => {
       setIsOpenComplete(true);
     }, 1500);
-  };
+  }, [play]);
 
   useEffect(() => {
     if (isOpen) {
@@ -55,7 +55,7 @@ export function LetterModal({ isOpen, onClose, autoOpen = false }: LetterModalPr
         setIsOpenComplete(true);
       }
     }
-  }, [isOpen, autoOpen]);
+  }, [isOpen, autoOpen, handleOpenLetter]);
 
   return (
     <AnimatePresence>
