@@ -1,0 +1,285 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { useKnowledgeStore, useGameStore } from "@/store";
+import { useSceneTransition } from "@/hooks/useSceneTransition";
+import { useGameAudio } from "@/hooks/useGameAudio";
+import { SCENE_IDS } from "@/lib/game";
+
+export function WifiMissionCompletedScene() {
+  const [showImage, setShowImage] = useState(false);
+  const [showTitle, setShowTitle] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [showSkillCard, setShowSkillCard] = useState(false);
+  const [showSavedToast, setShowSavedToast] = useState(false);
+
+  const { unlockWifiCard, openNotebook, closeNotebook } = useKnowledgeStore();
+  const addCompletedMission = useGameStore((s) => s.addCompletedMission);
+  const setMission2Started = useGameStore((s) => s.setMission2Started);
+  const { transitionToScene } = useSceneTransition();
+  const { play } = useGameAudio();
+
+  useEffect(() => {
+    play("mission-success", 0.5);
+    addCompletedMission("mission-2");
+
+    setTimeout(() => {
+      setShowImage(true);
+    }, 300);
+
+    setTimeout(() => {
+      setShowTitle(true);
+    }, 1500);
+
+    setTimeout(() => {
+      setShowOptions(true);
+    }, 2500);
+  }, [play, addCompletedMission]);
+
+  const handleViewSkillCard = useCallback(() => {
+    play("ui-confirm");
+    setShowSkillCard(true);
+  }, [play]);
+
+  const handleSaveToNotebook = useCallback(() => {
+    play("ui-confirm");
+    const card = unlockWifiCard();
+    openNotebook(card.id);
+    setShowSkillCard(false);
+    setShowSavedToast(true);
+    setTimeout(() => {
+      setShowSavedToast(false);
+    }, 1500);
+  }, [unlockWifiCard, openNotebook, play]);
+
+  const handleNextMission = useCallback(() => {
+    play("ui-confirm");
+    closeNotebook();
+    setMission2Started(false);
+    void transitionToScene(SCENE_IDS.APARTMENT);
+  }, [play, closeNotebook, setMission2Started, transitionToScene]);
+
+  const handleBackToMenu = useCallback(() => {
+    play("ui-confirm");
+    closeNotebook();
+    setMission2Started(false);
+    void transitionToScene(SCENE_IDS.OPENING);
+  }, [play, closeNotebook, setMission2Started, transitionToScene]);
+
+  return (
+    <div className="relative h-full w-full overflow-hidden bg-black">
+      <AnimatePresence>
+        {showImage && (
+          <motion.div
+            key="image"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <Image
+              src="/images/wifi/mission_2_completed.jpg"
+              alt="Mission completed"
+              fill
+              className="object-cover"
+              quality={100}
+            />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              transition={{ duration: 2, delay: 0.5 }}
+              className="absolute inset-0 bg-black"
+            />
+          </motion.div>
+        )}
+
+        {showTitle && (
+          <motion.div
+            key="title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 z-30 text-center"
+          >
+            <h1
+              className="font-game-serif text-5xl md:text-7xl font-bold text-white tracking-[0.2em]"
+              style={{
+                textShadow: "0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.4)",
+              }}
+            >
+              Mission 2 Completed
+            </h1>
+          </motion.div>
+        )}
+
+        {showOptions && !showSkillCard && (
+          <motion.div
+            key="options"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="absolute top-1/2 left-[20%] z-30 flex flex-col gap-4"
+          >
+            <motion.button
+              type="button"
+              onClick={handleViewSkillCard}
+              className="px-12 py-4 bg-[#5d4a37] text-white text-xl font-serif tracking-[0.15em] uppercase hover:bg-[#4a3a2a] transition-colors rounded-full shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View Skill Card
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={handleNextMission}
+              className="px-12 py-4 bg-white/10 text-white text-xl font-serif tracking-[0.15em] uppercase hover:bg-white/20 transition-colors rounded-full shadow-xl border border-white/30"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Next Mission
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={handleBackToMenu}
+              className="px-12 py-4 bg-white/10 text-white text-xl font-serif tracking-[0.15em] uppercase hover:bg-white/20 transition-colors rounded-full shadow-xl border border-white/30"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              返回 MENU
+            </motion.button>
+          </motion.div>
+        )}
+
+        {showSkillCard && (
+          <motion.div
+            key="skill-card"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="relative max-w-2xl w-full mx-4"
+              style={{
+                background:
+                  "linear-gradient(135deg, #fdfbf7 0%, #f5e6d3 50%, #e8d5b7 100%)",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+              }}
+            >
+              <div className="p-8 border-4 border-[#8b7d6b]/20" style={{ backgroundImage: "repeating-linear-gradient(transparent, transparent 28px, rgba(139,125,107,0.06) 28px, rgba(139,125,107,0.06) 29px)" }}>
+                <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#8b7d6b]/30">
+                  <h2 className="font-game-serif text-3xl font-bold text-[#4a3a2a]">
+                    WiFi连接技能卡
+                  </h2>
+                  <span className="text-sm text-[#8b7d6b] uppercase tracking-widest">
+                    Mission 2
+                  </span>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
+                      问题
+                    </h3>
+                    <p className="text-[#4a3a2a] leading-relaxed text-lg">
+                      WiFi已连接但无法上网
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
+                      原因
+                    </h3>
+                    <p className="text-[#4a3a2a] leading-relaxed text-lg">
+                      网线插错接口（插在LAN口而非WAN口）
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-3">
+                      解决方法
+                    </h3>
+                    <ol className="list-decimal list-inside space-y-3">
+                      <li className="text-[#4a3a2a] leading-relaxed text-lg">
+                        检查路由器背面的网线接口
+                      </li>
+                      <li className="text-[#4a3a2a] leading-relaxed text-lg">
+                        蓝色口为WAN口，用于连接宽带网线
+                      </li>
+                      <li className="text-[#4a3a2a] leading-relaxed text-lg">
+                        黄色口为LAN口，用于连接电脑或机顶盒
+                      </li>
+                      <li className="text-[#4a3a2a] leading-relaxed text-lg">
+                        将网线从LAN口拔出，插入WAN口
+                      </li>
+                      <li className="text-[#4a3a2a] leading-relaxed text-lg">
+                        等待路由器重新连接即可
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div>
+                    <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
+                      需要工具
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li className="text-[#4a3a2a] leading-relaxed">网线</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
+                      安全提示
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li className="text-[#4a3a2a] leading-relaxed">插拔网线时动作要轻</li>
+                      <li className="text-[#4a3a2a] leading-relaxed">确保路由器已通电</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-4 border-t-2 border-[#8b7d6b]/30 flex justify-end">
+                  <motion.button
+                    type="button"
+                    onClick={handleSaveToNotebook}
+                    className="px-8 py-3 bg-[#5d4a37] text-white text-base font-serif tracking-wider hover:bg-[#4a3a2a] transition-colors rounded-full"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    保存至 Notebook
+                  </motion.button>
+                </div>
+              </div>
+
+              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-32 bg-[#c4a77d] rounded-l-lg" />
+              <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-4 h-28 bg-[#a68b5b]" />
+            </motion.div>
+          </motion.div>
+        )}
+
+        {showSavedToast && (
+          <motion.div
+            key="toast"
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 z-[60] flex items-center justify-center"
+          >
+            <div className="bg-white/70 text-black px-8 py-4 rounded-lg">
+              <p className="text-xl font-serif">已保存至 Notebook</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

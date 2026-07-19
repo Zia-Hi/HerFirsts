@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Color tokens — Morandi palette */
+  --color-cream-50: #fdfbf7;
+  --color-cream-100: #f9f5ed;
+  --color-cream-200: #f2ebdd;
+  --color-beige-100: #f3ede3;
+  --color-beige-300: #d9ccb8;
+  --color-beige-500: #b5a384;
+  --color-sage-200: #cdd6cb;
+  --color-sage-400: #8f9d8b;
+  --color-sage-500: #748472;
+  --color-dust-300: #b3c2c9;
+  --color-dust-500: #7a9199;
+  --color-oak-300: #c2a992;
+  --color-oak-500: #8f755c;
+  --color-gold-300: #d9c28e;
+  --color-gold-500: #b8954f;
+  --color-surface: #f9f5ed;
+  --color-surface-muted: #f2ebdd;
+  --color-surface-elevated: #fdfbf7;
+  --color-ink: #4a4236;
+  --color-ink-muted: #7a6d5a;
+  --color-ink-faint: #9a8a72;
+  --color-ink-inverse: #fdfbf7;
+
+  /* Spacing tokens */
+  --space-game-xs: 0.25rem;
+  --space-game-sm: 0.5rem;
+  --space-game-md: 1rem;
+  --space-game-lg: 1.5rem;
+  --space-game-xl: 2rem;
+  --space-game-2xl: 3rem;
+  --space-game-3xl: 4rem;
+  --space-scene-padding: 2.5rem;
+  --space-hud-gap: 1.25rem;
+
+  /* Animation tokens */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 600ms;
+  --duration-deliberate: 900ms;
+  --duration-scene: 1200ms;
+  --easing-soft: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --easing-enter: cubic-bezier(0, 0, 0.2, 1);
+  --easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --easing-weighted: cubic-bezier(0.45, 0.05, 0.15, 0.95);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .font-game-serif {
+    font-family: var(--font-serif), Georgia, serif;
+  }
+
+  .font-game-sans {
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  .font-game-cursive {
+    font-family: var(--font-cursive), cursive;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+  }
+}

@@ -1,0 +1,1 @@
+export { InteractableZone } from "./InteractableZone";

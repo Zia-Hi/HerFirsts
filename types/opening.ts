@@ -1,0 +1,15 @@
+export type OpeningPhase =
+  | "black"
+  | "subtitle"
+  | "fade-to-street"
+  | "street-view"
+  | "brightening"
+  | "white-screen"
+  | "fade-to-black"
+  | "door-exterior"
+  | "key-hold"
+  | "door-open"
+  | "fade-walk"
+  | "apartment-reveal"
+  | "title-card"
+  | "complete";
