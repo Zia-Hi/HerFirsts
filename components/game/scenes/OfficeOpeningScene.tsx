@@ -10,7 +10,7 @@ import { audioManager } from "@/lib/game/audio-manager";
 import { useGameStore } from "@/store";
 
 export function OfficeOpeningScene() {
-  const [phase, setPhase] = useState<"black" | "subtitle" | "city-view" | "brightening" | "office-reveal" | "complete">("black");
+  const [phase, setPhase] = useState<"black" | "subtitle" | "city-view" | "brightening" | "office-reveal" | "complete" | "fade-to-black">("black");
   const [subtitle, setSubtitle] = useState<string | null>(null);
   const [showWalkText, setShowWalkText] = useState(false);
   const [showMenu, setShowMenu] = useState(false);

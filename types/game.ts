@@ -6,7 +6,11 @@ export type GamePhase =
   | "apartment"
   | "mission"
   | "knowledge-card"
-  | "transition";
+  | "transition"
+  | "hotel-opening"
+  | "hotel"
+  | "office-opening"
+  | "office";
 
 export type TransitionState = "idle" | "fade-out" | "fade-in" | "loading";
 

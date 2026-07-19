@@ -6,7 +6,7 @@ import { SCENE_IDS } from "@/lib/game";
 import { useSceneTransition } from "@/hooks/useSceneTransition";
 import { useGameStore } from "@/store/game-store";
 import { useKnowledgeStore } from "@/store/knowledge-store";
-import { KnowledgeNotebook, SettingsButton, SettingsPanel } from "@/components/game/ui";
+import { KnowledgeNotebook, SettingsPanel } from "@/components/game/ui";
 
 export function GameHomepageScene() {
   const [showContent, setShowContent] = useState(false);
