@@ -200,16 +200,16 @@ export function GameHomepageScene() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 50 }}
         transition={{ duration: 0.8, delay: 0.7 }}
-        className="absolute inset-0 flex items-start justify-center px-8 pt-[327px] pointer-events-none"
+        className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 pt-32 md:pt-[327px] pb-8 overflow-y-auto pointer-events-none"
       >
-        <div className="flex justify-center gap-[59px]">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-[59px] max-w-7xl w-full">
           {chapters.map((chapter, index) => (
             <motion.div
               key={chapter.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 30 }}
               transition={{ duration: 0.5, delay: 0.8 + index * 0.15 }}
-              className="w-[358px] bg-[#FDFBF8] rounded-2xl shadow-xl overflow-hidden border border-[#E8D8C4] pointer-events-auto"
+              className="w-[280px] sm:w-[320px] md:w-[358px] bg-[#FDFBF8] rounded-2xl shadow-xl overflow-hidden border border-[#E8D8C4] pointer-events-auto"
             >
               <div className="relative">
                 <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm shadow-sm">
@@ -218,7 +218,7 @@ export function GameHomepageScene() {
                   </span>
                 </div>
 
-                <div className="h-[252px] overflow-hidden rounded-t-2xl">
+                <div className="h-[180px] sm:h-[220px] md:h-[252px] overflow-hidden rounded-t-2xl">
                   <img
                     src={chapter.imageUrl}
                     alt={chapter.title}
@@ -227,24 +227,24 @@ export function GameHomepageScene() {
                 </div>
 
                 <div
-                  className="absolute bottom-[-24px] left-1/2 -translate-x-1/2 w-12 h-12 rounded-full shadow-lg flex items-center justify-center"
+                  className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg flex items-center justify-center"
                   style={{ backgroundColor: chapter.color }}
                 >
                   {chapter.id === "chapter-1" && (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                       <polyline points="9 22 9 12 15 12 15 22" />
                     </svg>
                   )}
                   {chapter.id === "chapter-2" && (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                       <path d="M3 9h18" />
                       <path d="M9 21V9" />
                     </svg>
                   )}
                   {chapter.id === "chapter-3" && (
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                       <rect x="6" y="2" width="12" height="20" rx="2" ry="2" />
                       <path d="M16 2l2 6-2 6" />
                       <path d="M8 2l-2 6 2 6" />
@@ -253,8 +253,8 @@ export function GameHomepageScene() {
                 </div>
               </div>
 
-              <div className="p-5 text-center pt-10">
-                <h3 className="text-xl font-bold text-[#5D4A37] mb-2" style={{ fontFamily: "'Georgia', serif" }}>
+              <div className="p-4 sm:p-5 text-center pt-8 sm:pt-10">
+                <h3 className="text-lg sm:text-xl font-bold text-[#5D4A37] mb-2" style={{ fontFamily: "'Georgia', serif" }}>
                   {chapter.title}
                 </h3>
                 <p className="text-xs text-[#8B7A6A] mb-6 leading-relaxed">
@@ -265,17 +265,17 @@ export function GameHomepageScene() {
                   <motion.button
                     type="button"
                     onClick={() => handleChapterClick(chapter.id)}
-                    className="w-12 h-12 rounded-full shadow-md flex items-center justify-center cursor-pointer"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-md flex items-center justify-center cursor-pointer"
                     style={{ backgroundColor: chapter.color }}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
                     {chapter.completed ? (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                     ) : (
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
                     )}
@@ -284,9 +284,9 @@ export function GameHomepageScene() {
                   <button
                     type="button"
                     disabled
-                    className="w-12 h-12 rounded-full shadow-md flex items-center justify-center cursor-not-allowed bg-[#D4D0CA]"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-md flex items-center justify-center cursor-not-allowed bg-[#D4D0CA]"
                   >
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-[#A89888]" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-[#A89888]" fill="none" stroke="currentColor" strokeWidth="2">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
