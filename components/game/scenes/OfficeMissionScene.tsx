@@ -459,6 +459,7 @@ export function OfficeMissionScene() {
           whileTap={{ scale: 0.95 }}
           onClick={handleButtonClick}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 px-12 py-4 bg-[#5d4a37] text-white text-xl font-serif tracking-[0.15em] uppercase hover:bg-[#4a3a2a] transition-colors rounded-full shadow-xl"
+          style={{ transformOrigin: "center center" }}
         >
           {buttonText}
         </motion.button>
@@ -516,6 +517,7 @@ export function OfficeMissionScene() {
         className="absolute bottom-4 left-4 px-3 py-1.5 bg-black/40 backdrop-blur-sm rounded-full text-white/70 text-sm hover:text-white hover:bg-black/60 transition-colors z-[55] border border-white/20 flex items-center gap-1.5"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        style={{ transformOrigin: "center center" }}
       >
         <Home size={14} />
         返回主页
@@ -542,6 +544,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("Movie.mp4")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("Movie.mp4") ? "✓ 已删除" : "Movie.mp4\n7.8GB"}
               </motion.button>
@@ -552,6 +555,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("OfficeInstaller.exe")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("OfficeInstaller.exe") ? "✓ 已删除" : "OfficeInstaller.exe\n2GB"}
               </motion.button>
@@ -562,6 +566,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("OldProject.zip")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("OldProject.zip") ? "✓ 已删除" : "OldProject.zip\n3GB"}
               </motion.button>
@@ -576,6 +581,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("Zoom Recording")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("Zoom Recording") ? "✓" : "Zoom Recording"}
               </motion.button>
@@ -586,6 +592,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("Screenshots")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("Screenshots") ? "✓" : "Screenshots"}
               </motion.button>
@@ -596,6 +603,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("Screen Recording")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("Screen Recording") ? "✓" : "Screen Recording"}
               </motion.button>
@@ -605,7 +613,8 @@ export function OfficeMissionScene() {
             <motion.button
               type="button"
               onClick={handleButtonClick}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-green-500/70 hover:bg-green-600 rounded-full text-white text-lg font-bold flex flex-col items-center justify-center shadow-xl border-4 border-green-400 pointer-events-auto"
+              className="absolute top-1/2 left-1/2 w-40 h-40 bg-green-500/70 hover:bg-green-600 rounded-full text-white text-lg font-bold flex flex-col items-center justify-center shadow-xl border-4 border-green-400 pointer-events-auto"
+              initial={{ x: "-50%", y: "-50%" }}
               whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -623,6 +632,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("cache.tmp")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("cache.tmp") ? "✓" : "cache.tmp"}
               </motion.button>
@@ -633,6 +643,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("log.txt")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("log.txt") ? "✓" : "log.txt"}
               </motion.button>
@@ -643,6 +654,7 @@ export function OfficeMissionScene() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={clickedFiles.includes("temp.dat")}
+                style={{ transformOrigin: "center center" }}
               >
                 {clickedFiles.includes("temp.dat") ? "✓" : "temp.dat"}
               </motion.button>
@@ -652,7 +664,8 @@ export function OfficeMissionScene() {
             <motion.button
               type="button"
               onClick={handleButtonClick}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-blue-500 hover:bg-blue-600 rounded-lg text-white text-lg font-bold shadow-xl border-2 border-blue-400 pointer-events-auto"
+              className="absolute left-1/2 -translate-x-1/2 px-8 py-4 bg-blue-500 hover:bg-blue-600 rounded-lg text-white text-lg font-bold shadow-xl border-2 border-blue-400 pointer-events-auto"
+              style={{ top: "65%", transform: "translateX(-50%)", transformOrigin: "center center" }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -669,6 +682,7 @@ export function OfficeMissionScene() {
         className="absolute bottom-4 right-4 px-4 py-2 bg-blue-500/80 hover:bg-blue-600 disabled:bg-gray-500 text-white text-sm font-bold rounded-full shadow-lg z-30 flex items-center gap-2"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        style={{ transformOrigin: "center center" }}
       >
         💡 提示
       </motion.button>

@@ -47,12 +47,12 @@ export function OfficeScene() {
   }, [chapter2LetterPending, chapter2LetterShown, setChapter2LetterShown, setChapter2LetterPending]);
 
   useEffect(() => {
-    if (subtitleComplete) {
+    if (subtitleComplete && !isChapter2Completed) {
       setTimeout(() => {
         setShowStoryIntro(true);
       }, 1000);
     }
-  }, [subtitleComplete]);
+  }, [subtitleComplete, isChapter2Completed]);
 
   const handleStartMission = () => {
     play("ui-confirm");

@@ -70,8 +70,11 @@ export function GameBootstrap() {
       scenesRegistered = true;
     }
 
-    saveManager.clear();
-    localStorage.removeItem(GAME_STORAGE_KEY);
+    const savedData = saveManager.load();
+    if (savedData) {
+      saveManager.applySave(savedData);
+      console.log("📂 Save data loaded successfully");
+    }
     setSaveLoaded(true);
     void transitionToScene(SCENE_IDS.LANDING_ANIMATION);
 

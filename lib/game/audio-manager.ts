@@ -25,6 +25,7 @@ class AudioManagerService {
   private initialized = false;
   private bgmAudio: HTMLAudioElement | null = null;
   private bgmFadeTimer: number | null = null;
+  private bgmLoading = false;
 
   initialize(): void {
     if (this.initialized) return;
@@ -167,10 +168,20 @@ class AudioManagerService {
     loop: boolean,
   ): void {
     try {
+      if (this.bgmAudio && !this.bgmAudio.paused) {
+        return;
+      }
+
+      if (this.bgmLoading) {
+        return;
+      }
+
       if (this.bgmAudio) {
         this.bgmAudio.pause();
         this.bgmAudio = null;
       }
+
+      this.bgmLoading = true;
 
       const audio = new Audio("/audio/music.mp4");
       audio.preload = "auto";
@@ -212,13 +223,23 @@ class AudioManagerService {
         }, fadeDuration * 1000);
       };
 
+      const handleLoaded = () => {
+        this.bgmLoading = false;
+        audio.play().catch((error) => {
+          console.warn("Auto-play blocked, waiting for user interaction:", error);
+        });
+      };
+
+      const handleError = () => {
+        this.bgmLoading = false;
+        console.warn("Failed to load background music file");
+      };
+
       audio.addEventListener("timeupdate", handleTimeUpdate);
       audio.addEventListener("ended", handleEnded);
+      audio.addEventListener("loadeddata", handleLoaded);
+      audio.addEventListener("error", handleError);
       audio.loop = false;
-
-      audio.play().catch((error) => {
-        console.warn("Auto-play blocked, waiting for user interaction:", error);
-      });
 
       this.bgmAudio = audio;
 
@@ -228,8 +249,11 @@ class AudioManagerService {
         nodes: [gain, source],
         audioElement: audio,
         stopFn: () => {
+          this.bgmLoading = false;
           audio.removeEventListener("timeupdate", handleTimeUpdate);
           audio.removeEventListener("ended", handleEnded);
+          audio.removeEventListener("loadeddata", handleLoaded);
+          audio.removeEventListener("error", handleError);
           audio.pause();
           audio.currentTime = 0;
           source.disconnect();
@@ -238,6 +262,7 @@ class AudioManagerService {
         },
       });
     } catch (error) {
+      this.bgmLoading = false;
       console.warn("Failed to load background music:", error);
     }
   }

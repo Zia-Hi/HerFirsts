@@ -701,9 +701,8 @@ export function LightingMissionScene() {
                 style={{
                   left: `${pos.x}%`,
                   top: `${pos.y}%`,
-                  marginLeft: "-50%",
-                  marginTop: "-50%",
                 }}
+                initial={{ x: "-50%", y: "-50%" }}
                 whileHover={!isCollected ? { scale: 1.15 } : {}}
                 whileTap={!isCollected ? { scale: 0.9 } : {}}
               >
