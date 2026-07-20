@@ -97,6 +97,31 @@ const HOTEL_KNOWLEDGE_CARD: Omit<KnowledgeCard, "id" | "unlockedAt"> = {
   ],
 };
 
+const OFFICE_KNOWLEDGE_CARD: Omit<KnowledgeCard, "id" | "unlockedAt"> = {
+  missionId: "office",
+  title: "磁盘清理技能卡",
+  problem: "C盘空间不足，Office自动保存失败、文件传输异常、系统卡顿",
+  cause: "临时文件堆积、下载文件占用、回收站未清空、微信缓存等占用大量空间",
+  tools: [],
+  repairSteps: [
+    "清空回收站：删除文件后需手动清空回收站才能真正释放空间",
+    "使用Windows磁盘清理工具：设置 > 系统 > 存储 > 临时文件，清理可释放大量空间",
+    "清理临时文件夹：运行Win+R输入%temp%，删除所有临时文件",
+    "清理Windows更新缓存：删除C:\\Windows\\SoftwareDistribution\\Download目录下的文件",
+    "修改微信存储位置：将微信文件默认保存路径从C盘改到其他盘符",
+  ],
+  safetyTips: [
+    "删除文件前确认不再需要，清空回收站后无法恢复",
+    "定期清理习惯比临时清理更重要，建议每周检查一次",
+    "大型文件（视频、安装包）不要放在桌面或C盘",
+  ],
+  tips: [
+    "保持D盘或其他盘符有足够空间作为备用",
+    "将常用软件安装到非系统盘",
+    "定期检查下载文件夹，及时清理不需要的文件",
+  ],
+};
+
 const initialState: KnowledgeState = {
   cards: [],
   notebookOpen: false,
@@ -108,6 +133,7 @@ interface KnowledgeStoreActions {
   unlockWifiCard: () => KnowledgeCard;
   unlockLightingCard: () => KnowledgeCard;
   unlockHotelCard: () => KnowledgeCard;
+  unlockOfficeCard: () => KnowledgeCard;
   openNotebook: (cardId?: string) => void;
   closeNotebook: () => void;
   hasCard: (missionId: string) => boolean;
@@ -168,6 +194,20 @@ export const useKnowledgeStore = create<KnowledgeState & KnowledgeStoreActions>(
     const card: KnowledgeCard = {
       ...HOTEL_KNOWLEDGE_CARD,
       id: `knowledge-hotel-${Date.now()}`,
+      unlockedAt: Date.now(),
+    };
+
+    set((state) => ({ cards: [...state.cards, card] }));
+    return card;
+  },
+
+  unlockOfficeCard: () => {
+    const existing = get().cards.find((c) => c.missionId === "office");
+    if (existing) return existing;
+
+    const card: KnowledgeCard = {
+      ...OFFICE_KNOWLEDGE_CARD,
+      id: `knowledge-office-${Date.now()}`,
       unlockedAt: Date.now(),
     };
 

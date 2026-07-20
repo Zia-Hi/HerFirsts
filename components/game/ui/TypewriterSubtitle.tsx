@@ -6,9 +6,10 @@ import { useGameAudio } from "@/hooks/useGameAudio";
 
 interface TypewriterSubtitleProps {
   text: string | null;
+  onComplete?: () => void;
 }
 
-export function TypewriterSubtitle({ text }: TypewriterSubtitleProps) {
+export function TypewriterSubtitle({ text, onComplete }: TypewriterSubtitleProps) {
   const [displayText, setDisplayText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const { play } = useGameAudio();
@@ -32,6 +33,9 @@ export function TypewriterSubtitle({ text }: TypewriterSubtitleProps) {
       } else {
         setIsTyping(false);
         clearInterval(interval);
+        if (onComplete) {
+          setTimeout(onComplete, 500);
+        }
       }
     }, 80);
 

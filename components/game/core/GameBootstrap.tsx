@@ -15,6 +15,8 @@ import { LightingMissionCompletedScene } from "@/components/game/scenes/Lighting
 import { LivingRoomToolboxScene } from "@/components/game/scenes/LivingRoomToolboxScene";
 import { OfficeOpeningScene } from "@/components/game/scenes/OfficeOpeningScene";
 import { OfficeScene } from "@/components/game/scenes/OfficeScene";
+import { OfficeMissionScene } from "@/components/game/scenes/OfficeMissionScene";
+import { OfficeMissionCompletedScene } from "@/components/game/scenes/OfficeMissionCompletedScene";
 import { HotelOpeningScene } from "@/components/game/scenes/HotelOpeningScene";
 import { HotelScene } from "@/components/game/scenes/HotelScene";
 import { HotelRoomScene } from "@/components/game/scenes/HotelRoomScene";
@@ -41,6 +43,8 @@ function registerAllScenes() {
   registerScene({ id: SCENE_IDS.LIVING_ROOM_TOOLBOX, component: LivingRoomToolboxScene });
   registerScene({ id: SCENE_IDS.OFFICE_OPENING, component: OfficeOpeningScene });
   registerScene({ id: SCENE_IDS.OFFICE, component: OfficeScene });
+  registerScene({ id: SCENE_IDS.OFFICE_MISSION, component: OfficeMissionScene });
+  registerScene({ id: SCENE_IDS.OFFICE_MISSION_COMPLETED, component: OfficeMissionCompletedScene });
   registerScene({ id: SCENE_IDS.HOTEL_OPENING, component: HotelOpeningScene });
   registerScene({ id: SCENE_IDS.HOTEL, component: HotelScene });
   registerScene({ id: SCENE_IDS.HOTEL_ROOM, component: HotelRoomScene });

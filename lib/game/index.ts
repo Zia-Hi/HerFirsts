@@ -42,6 +42,8 @@ export const SCENE_IDS = {
   LIVING_ROOM_TOOLBOX: "living-room-toolbox",
   OFFICE_OPENING: "office-opening",
   OFFICE: "office",
+  OFFICE_MISSION: "office-mission",
+  OFFICE_MISSION_COMPLETED: "office-mission-completed",
   HOTEL_OPENING: "hotel-opening",
   HOTEL: "hotel",
   HOTEL_ROOM: "hotel-room",

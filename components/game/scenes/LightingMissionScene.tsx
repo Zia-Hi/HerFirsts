@@ -73,7 +73,7 @@ export function LightingMissionScene() {
 
     if (lightingPrecautionShown) {
       setTimeout(() => {
-        setPhase("start");
+        setPhase("check-power");
       }, 500);
     } else {
       setTimeout(() => {

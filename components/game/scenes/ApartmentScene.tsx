@@ -527,7 +527,7 @@ export function ApartmentScene() {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.8 }}
-        className="absolute right-4 top-[300px] z-30 flex flex-col items-center hover:scale-110 transition-transform"
+        className="absolute right-4 top-[290px] z-30 flex flex-col items-center hover:scale-110 transition-transform"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         title="查看关卡"
