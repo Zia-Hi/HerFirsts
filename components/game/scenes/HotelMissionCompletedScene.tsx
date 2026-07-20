@@ -16,6 +16,7 @@ export function HotelMissionCompletedScene() {
 
   const { unlockHotelCard, openNotebook, closeNotebook } = useKnowledgeStore();
   const addCompletedMission = useGameStore((s) => s.addCompletedMission);
+  const setChapter3LetterPending = useGameStore((s) => s.setChapter3LetterPending);
   const { transitionToScene } = useSceneTransition();
   const { play } = useGameAudio();
 
@@ -61,8 +62,9 @@ export function HotelMissionCompletedScene() {
   const handleBackToHotel = useCallback(() => {
     play("ui-confirm");
     closeNotebook();
-    void transitionToScene(SCENE_IDS.HOTEL_ROOM);
-  }, [play, closeNotebook, transitionToScene]);
+    setChapter3LetterPending(true);
+    void transitionToScene(SCENE_IDS.HOTEL);
+  }, [play, closeNotebook, setChapter3LetterPending, transitionToScene]);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-black">

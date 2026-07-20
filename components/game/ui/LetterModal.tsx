@@ -4,32 +4,72 @@ import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameAudio } from "@/hooks/useGameAudio";
 
+export type LetterChapter = 1 | 2 | 3;
+
 interface LetterModalProps {
   isOpen: boolean;
   onClose: () => void;
   autoOpen?: boolean;
+  chapter: LetterChapter;
 }
 
-const LETTER_CONTENT = [
-  "女孩",
-  "第一次，总会有一点手忙脚乱。",
-  "有时候，我们害怕开始，其实并不是因为事情太难，只是因为我们太早相信了\"自己不会\"。",
-  "可很多能力，从来都不是天生拥有的。",
-  "它们只是一次又一次尝试之后，慢慢长出来的。",
-  "今天，你或许只是解决了一次网络故障。",
-  "但更重要的是，你开始相信:",
-  "原来很多事情，我也可以做到。",
-  "希望未来，当你面对新的未知时",
-  "不会第一时间说\"我不行\"",
-  "而是愿意告诉自己:",
-  "让我试试看。",
-];
+const LETTER_CONTENT: Record<LetterChapter, string[]> = {
+  1: [
+    "女孩",
+    "第一次，总会有一点手忙脚乱。",
+    "有时候，我们害怕开始，其实并不是因为事情太难，只是因为我们太早相信了\"自己不会\"。",
+    "可很多能力，从来都不是天生拥有的。",
+    "它们只是一次又一次尝试之后，慢慢长出来的。",
+    "今天，你或许只是解决了一次网络故障。",
+    "但更重要的是，你开始相信:",
+    "原来很多事情，我也可以做到。",
+    "希望未来，当你面对新的未知时",
+    "不会第一时间说\"我不行\"",
+    "而是愿意告诉自己:",
+    "让我试试看。",
+  ],
+  2: [
+    "女孩，",
+    "长大以后，你会发现，很多问题都没有标准答案。",
+    "有时候，没有人会告诉你该怎么办;有时候，每个人都在忙着自己的事情;",
+    "更多时候，你只能一点一点寻找线索、尝试、判断，再继续向前。",
+    "今天，你完成的也许只是一次电脑内存清理。",
+    "但希望下一次，当生活抛来新的难题时，你记得今天的自己。",
+    "观察。",
+    "思考。",
+    "尝试。",
+    "然后，相信自己能够找到答案。",
+  ],
+  3: [
+    "女孩",
+    "如果可以，我们希望这个世界从来不需要你学习这些。",
+    "希望夜晚可以安心走回家，独自旅行也不用反复确认门锁;",
+    "希望陌生人的善意多一点，恶意少一点;",
+    "希望每一次出发，都只是一次普通的出发。",
+    "可现实并不总是如此",
+    "有些危险，并不是因为你做错了什么，而是因为有人选择了伤害别人。",
+    "所以，请永远不要把别人的恶，变成对自己的责备。",
+    "我们相信，真正解决问题的方法，从来不是要求女孩更加小心，而是让社会更加文明，让恶意付出代价，让善意成为常态。",
+    "在那之前，请允许自己多一分准备。",
+    "因为做好准备，不代表向恐惧低头;",
+    "而是认真地珍惜自己。",
+  ],
+};
 
-export function LetterModal({ isOpen, onClose, autoOpen = false }: LetterModalProps) {
+const LETTER_TITLES: Record<LetterChapter, string> = {
+  1: "来自你的第一封信",
+  2: "来自你的第二封信",
+  3: "来自你的第三封信",
+};
+
+export function LetterModal({ isOpen, onClose, autoOpen = false, chapter }: LetterModalProps) {
   const [isOpenAnimation, setIsOpenAnimation] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
   const [isOpenComplete, setIsOpenComplete] = useState(false);
   const { play } = useGameAudio();
+
+  const content = LETTER_CONTENT[chapter];
+  const title = LETTER_TITLES[chapter];
 
   const handleClose = () => {
     play("ui-cancel");
@@ -162,7 +202,7 @@ export function LetterModal({ isOpen, onClose, autoOpen = false }: LetterModalPr
                   </div>
 
                   <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
-                    {LETTER_CONTENT.map((line, index) => (
+                    {content.map((line, index) => (
                       <motion.p
                         key={index}
                         initial={{ opacity: 0, y: 10 }}
@@ -214,7 +254,7 @@ export function LetterModal({ isOpen, onClose, autoOpen = false }: LetterModalPr
               transition={{ delay: 0.5 }}
               className="absolute bottom-16 text-white/60 font-serif text-sm tracking-wider"
             >
-              来自你的第一封信
+              {title}
             </motion.p>
           )}
         </motion.div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SettingsButton, SettingsPanel, TypewriterSubtitle } from "@/components/game/ui";
+import { LetterModal, SettingsButton, SettingsPanel, TypewriterSubtitle } from "@/components/game/ui";
 import { useGameAudio } from "@/hooks/useGameAudio";
 import { useSceneTransition } from "@/hooks/useSceneTransition";
 import { useGameStore } from "@/store";
@@ -16,16 +16,35 @@ export function OfficeScene() {
   const [fadeToBlack, setFadeToBlack] = useState(false);
   const [showStoryIntro, setShowStoryIntro] = useState(false);
   const [subtitleComplete, setSubtitleComplete] = useState(false);
+  const [showLetter, setShowLetter] = useState(false);
+  const [isLetterAutoOpen, setIsLetterAutoOpen] = useState(false);
 
   const { play } = useGameAudio();
   const { transitionToScene } = useSceneTransition();
   const completedMissions = useGameStore((s) => s.completedMissions);
   const mission4Started = useGameStore((s) => s.mission4Started);
+  const chapter2LetterPending = useGameStore((s) => s.chapter2LetterPending);
+  const chapter2LetterShown = useGameStore((s) => s.chapter2LetterShown);
+  const setChapter2LetterShown = useGameStore((s) => s.setChapter2LetterShown);
+  const setChapter2LetterPending = useGameStore((s) => s.setChapter2LetterPending);
+
+  const isChapter2Completed = completedMissions.includes("mission-4");
 
   useEffect(() => {
     play("ambient-apartment");
     setSubtitle("Welcome to your new office.");
   }, [play]);
+
+  useEffect(() => {
+    if (chapter2LetterPending && !chapter2LetterShown) {
+      setTimeout(() => {
+        setShowLetter(true);
+        setIsLetterAutoOpen(true);
+        setChapter2LetterShown(true);
+        setChapter2LetterPending(false);
+      }, 2000);
+    }
+  }, [chapter2LetterPending, chapter2LetterShown, setChapter2LetterShown, setChapter2LetterPending]);
 
   useEffect(() => {
     if (subtitleComplete) {
@@ -122,6 +141,36 @@ export function OfficeScene() {
             关卡
           </span>
         </motion.button>
+
+        {isChapter2Completed && (
+          <motion.button
+            type="button"
+            onClick={() => {
+              play("ui-confirm");
+              setShowLetter(true);
+              setIsLetterAutoOpen(false);
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.9 }}
+            className="flex flex-col items-center hover:scale-110 transition-transform"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            title="查看信件"
+          >
+            <div className="w-12 h-12 bg-[#d4a574] border-2 border-[#b89467] rounded-lg shadow-lg flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5d4a37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <path d="M3 10h18" />
+                <path d="M3 14h18" />
+                <path d="M3 8h18" />
+              </svg>
+            </div>
+            <span className="font-game-sans mt-1 block text-center text-[10px] uppercase tracking-widest text-cream-100 opacity-90">
+              信件
+            </span>
+          </motion.button>
+        )}
 
         <SettingsButton
           onClick={() => setShowSettings(true)}
@@ -246,6 +295,16 @@ export function OfficeScene() {
           />
         )}
       </AnimatePresence>
+
+      <LetterModal 
+        isOpen={showLetter} 
+        onClose={() => {
+          setShowLetter(false);
+          setIsLetterAutoOpen(false);
+        }}
+        autoOpen={isLetterAutoOpen}
+        chapter={2}
+      />
     </div>
   );
 }

@@ -20,6 +20,10 @@ interface GameStoreState {
   lightingPrecautionShown: boolean;
   chapter1LetterPending: boolean;
   chapter1LetterShown: boolean;
+  chapter2LetterPending: boolean;
+  chapter2LetterShown: boolean;
+  chapter3LetterPending: boolean;
+  chapter3LetterShown: boolean;
   devMode: boolean;
 }
 
@@ -41,6 +45,10 @@ interface GameStoreActions {
   setLightingPrecautionShown: (shown: boolean) => void;
   setChapter1LetterPending: (pending: boolean) => void;
   setChapter1LetterShown: (shown: boolean) => void;
+  setChapter2LetterPending: (pending: boolean) => void;
+  setChapter2LetterShown: (shown: boolean) => void;
+  setChapter3LetterPending: (pending: boolean) => void;
+  setChapter3LetterShown: (shown: boolean) => void;
   getSnapshot: () => GameStateSnapshot;
   hydrate: (state: Partial<GameStoreState>) => void;
   reset: () => void;
@@ -66,6 +74,10 @@ const initialState: GameStoreState = {
   lightingPrecautionShown: false,
   chapter1LetterPending: false,
   chapter1LetterShown: false,
+  chapter2LetterPending: false,
+  chapter2LetterShown: false,
+  chapter3LetterPending: false,
+  chapter3LetterShown: false,
   devMode: false,
 };
 
@@ -111,6 +123,14 @@ export const useGameStore = create<GameStoreState & GameStoreActions>((set, get)
   setChapter1LetterPending: (chapter1LetterPending) => set({ chapter1LetterPending }),
 
   setChapter1LetterShown: (chapter1LetterShown) => set({ chapter1LetterShown }),
+
+  setChapter2LetterPending: (chapter2LetterPending) => set({ chapter2LetterPending }),
+
+  setChapter2LetterShown: (chapter2LetterShown) => set({ chapter2LetterShown }),
+
+  setChapter3LetterPending: (chapter3LetterPending) => set({ chapter3LetterPending }),
+
+  setChapter3LetterShown: (chapter3LetterShown) => set({ chapter3LetterShown }),
 
   getSnapshot: () => {
     const { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected, lightingPrecautionShown, mission4Started } = get();

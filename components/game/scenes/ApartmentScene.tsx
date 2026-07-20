@@ -810,6 +810,7 @@ export function ApartmentScene() {
           setIsLetterAutoOpen(false);
         }}
         autoOpen={isLetterAutoOpen}
+        chapter={1}
       />
     </div>
   );

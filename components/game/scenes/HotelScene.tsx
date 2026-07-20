@@ -2,22 +2,43 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { SettingsButton, SettingsPanel, TypewriterSubtitle } from "@/components/game/ui";
+import { LetterModal, SettingsButton, SettingsPanel, TypewriterSubtitle } from "@/components/game/ui";
 import { useGameAudio } from "@/hooks/useGameAudio";
 import { useSceneTransition } from "@/hooks/useSceneTransition";
+import { useGameStore } from "@/store";
 import { SCENE_IDS } from "@/lib/game";
 
 export function HotelScene() {
   const [showSettings, setShowSettings] = useState(false);
   const [subtitle, setSubtitle] = useState("");
+  const [showLetter, setShowLetter] = useState(false);
+  const [isLetterAutoOpen, setIsLetterAutoOpen] = useState(false);
 
   const { play } = useGameAudio();
   const { transitionToScene } = useSceneTransition();
+  const completedMissions = useGameStore((s) => s.completedMissions);
+  const chapter3LetterPending = useGameStore((s) => s.chapter3LetterPending);
+  const chapter3LetterShown = useGameStore((s) => s.chapter3LetterShown);
+  const setChapter3LetterShown = useGameStore((s) => s.setChapter3LetterShown);
+  const setChapter3LetterPending = useGameStore((s) => s.setChapter3LetterPending);
+
+  const isChapter3Completed = completedMissions.includes("mission-5") && completedMissions.includes("mission-6");
 
   useEffect(() => {
     play("ambient-apartment");
     setSubtitle("Welcome to your hotel.");
   }, [play]);
+
+  useEffect(() => {
+    if (chapter3LetterPending && !chapter3LetterShown) {
+      setTimeout(() => {
+        setShowLetter(true);
+        setIsLetterAutoOpen(true);
+        setChapter3LetterShown(true);
+        setChapter3LetterPending(false);
+      }, 2000);
+    }
+  }, [chapter3LetterPending, chapter3LetterShown, setChapter3LetterShown, setChapter3LetterPending]);
 
   const handleEnterRoom = () => {
     play("ui-confirm");
@@ -68,6 +89,36 @@ export function HotelScene() {
           onClick={() => setShowSettings(true)}
           className="relative flex flex-col items-center hover:scale-110 transition-transform"
         />
+
+        {isChapter3Completed && (
+          <motion.button
+            type="button"
+            onClick={() => {
+              play("ui-confirm");
+              setShowLetter(true);
+              setIsLetterAutoOpen(false);
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.7 }}
+            className="flex flex-col items-center hover:scale-110 transition-transform"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            title="查看信件"
+          >
+            <div className="w-12 h-12 bg-[#d4a574] border-2 border-[#b89467] rounded-lg shadow-lg flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5d4a37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <path d="M3 10h18" />
+                <path d="M3 14h18" />
+                <path d="M3 8h18" />
+              </svg>
+            </div>
+            <span className="font-game-sans mt-1 block text-center text-[10px] uppercase tracking-widest text-cream-100 opacity-90">
+              信件
+            </span>
+          </motion.button>
+        )}
       </div>
 
       <TypewriterSubtitle text={subtitle} />
@@ -90,6 +141,16 @@ export function HotelScene() {
       </motion.div>
 
       <SettingsPanel open={showSettings} onClose={() => setShowSettings(false)} />
+
+      <LetterModal 
+        isOpen={showLetter} 
+        onClose={() => {
+          setShowLetter(false);
+          setIsLetterAutoOpen(false);
+        }}
+        autoOpen={isLetterAutoOpen}
+        chapter={3}
+      />
     </div>
   );
 }

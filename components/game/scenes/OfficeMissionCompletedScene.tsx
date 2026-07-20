@@ -17,6 +17,7 @@ export function OfficeMissionCompletedScene() {
 
   const { unlockOfficeCard, openNotebook, closeNotebook } = useKnowledgeStore();
   const addCompletedMission = useGameStore((s) => s.addCompletedMission);
+  const setChapter2LetterPending = useGameStore((s) => s.setChapter2LetterPending);
   const { transitionToScene } = useSceneTransition();
   const { play } = useGameAudio();
 
@@ -62,8 +63,9 @@ export function OfficeMissionCompletedScene() {
   const handleBackToMenu = useCallback(() => {
     play("ui-confirm");
     closeNotebook();
-    void transitionToScene(SCENE_IDS.GAME_HOMEPAGE);
-  }, [play, closeNotebook, transitionToScene]);
+    setChapter2LetterPending(true);
+    void transitionToScene(SCENE_IDS.OFFICE);
+  }, [play, closeNotebook, setChapter2LetterPending, transitionToScene]);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-black">
