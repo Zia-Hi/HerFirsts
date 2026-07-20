@@ -230,17 +230,17 @@ export function ApartmentScene() {
 
       setTimeout(() => {
         setSubtitle(null);
-      }, 4000);
+      }, 5000);
 
       setTimeout(() => {
         setSubtitle("先从洗个热水澡开始吧~");
-      }, 4500);
+      }, 5500);
 
       setTimeout(() => {
         setSubtitle(null);
         setWelcomeShown(true);
         saveManager.save();
-      }, 7000);
+      }, 8000);
     }
 
     }, [welcomeShown, setWelcomeShown]);
