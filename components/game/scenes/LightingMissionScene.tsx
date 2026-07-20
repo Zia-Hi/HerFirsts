@@ -71,7 +71,11 @@ export function LightingMissionScene() {
   useEffect(() => {
     if (phase !== "idle") return;
 
-    if (lightingPrecautionShown) {
+    if (hasAllTools) {
+      setTimeout(() => {
+        setPhase("prepare-ladder");
+      }, 500);
+    } else if (lightingPrecautionShown) {
       setTimeout(() => {
         setPhase("check-power");
       }, 500);

@@ -7,7 +7,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   masterVolume: 1,
   musicVolume: 1,
   sfxVolume: 0.5,
-  ambientVolume: 0.6,
+  ambientVolume: 0,
   reducedMotion: false,
 };
 
