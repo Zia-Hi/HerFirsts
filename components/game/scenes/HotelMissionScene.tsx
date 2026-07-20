@@ -159,13 +159,13 @@ export function HotelMissionScene() {
           
           setTimeout(() => {
             hideDialog();
-            setShowRedDot(false);
             
             if (newInspectedAreas.length === INSPECT_AREAS.length) {
               setPhase("step3");
               setTimeout(() => {
                 showDialog("仔细观察：<br/>• 有一个红色的发光点<br/>• 表面有一个不符合设计的小圆孔<br/>• 小孔的位置正对床铺<br/>• 内部隐约可见类似镜头的结构");
                 setTimeout(() => {
+                  setShowRedDot(false);
                   setShowChoices(true);
                 }, 2000);
               }, 500);
@@ -173,11 +173,12 @@ export function HotelMissionScene() {
               showDialog("先检查完所有区域，再决定下一步怎么做。");
               setTimeout(() => {
                 hideDialog();
+                setShowRedDot(false);
                 setCurrentInspectArea(null);
                 setCurrentImage("/pinterest/hotel/hotel_5.jpg");
               }, 3000);
             }
-          }, 3500);
+          }, 5000);
         } else {
           showDialog(`${area.name}看起来一切正常。${area.hint}`);
           setTimeout(() => {
@@ -232,8 +233,8 @@ export function HotelMissionScene() {
           setTimeout(() => {
             void transitionToScene(SCENE_IDS.HOTEL_MISSION_COMPLETED);
           }, 1000);
-        }, 4000);
-      }, 5000);
+        }, 2500);
+      }, 3500);
     } else if (choice === "A") {
       showDialog("这样做太冒险了！自行拆卸可能会破坏关键证据，甚至可能触发设备的报警或数据销毁功能。请重新选择。");
       setTimeout(() => {
@@ -330,7 +331,7 @@ export function HotelMissionScene() {
         </div>
       </div>
 
-      <div className="absolute left-4 bottom-28 z-30">
+      <div className="absolute right-4 top-20 z-30">
         <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4 space-y-3">
           {MISSION_STEPS.map((step) => {
             const status = getStepStatus(step.id);
@@ -368,7 +369,7 @@ export function HotelMissionScene() {
       <AnimatePresence>
         {dialogVisible && currentDialog && (
           <motion.div
-            className="absolute inset-x-0 bottom-28 z-30 flex justify-center px-8"
+            className="absolute inset-x-0 top-20 z-30 flex justify-center px-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}

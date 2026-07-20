@@ -396,7 +396,7 @@ export function ShowerMissionScene() {
         />
       </motion.div>
 
-      {waterSpraying && !waterFixed && repairPhase === "idle" && (
+      {waterSpraying && !waterFixed && (repairPhase === "idle" || repairPhase === "rub") && (
         <div className="absolute left-1/2 top-[35%] -translate-x-1/2 pointer-events-none">
           {[...Array(15)].map((_, i) => (
             <motion.div

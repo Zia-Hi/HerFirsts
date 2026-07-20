@@ -141,8 +141,8 @@ export function LightingMissionScene() {
             setShowDialog("好的，电源已断开。现在去客厅工具箱拿维修工具吧");
             setShowButton(true);
             setButtonText("去客厅拿工具");
-          }, 1000);
-        }, 1000);
+          }, 2000);
+        }, 2000);
         break;
 
       case "collect-tools":
@@ -641,7 +641,7 @@ export function LightingMissionScene() {
       );
     }
 
-    if (phase === "remove-lampshade" && snappedLampPositions.length < 4) {
+    if (phase === "remove-lampshade" && currentImage === 10 && snappedLampPositions.length < 4) {
       return (
         <div className="absolute inset-0 z-20 flex items-center justify-center">
           <div className="relative w-64 h-64">

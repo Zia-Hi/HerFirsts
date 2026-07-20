@@ -138,7 +138,7 @@ export function LightingMissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回公寓
+              Next Mission
             </motion.button>
 
             <motion.button
@@ -148,7 +148,7 @@ export function LightingMissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回 MENU
+              返回 HOME
             </motion.button>
           </motion.div>
         )}

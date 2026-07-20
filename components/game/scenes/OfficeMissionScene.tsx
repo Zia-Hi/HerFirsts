@@ -664,8 +664,9 @@ export function OfficeMissionScene() {
             <motion.button
               type="button"
               onClick={handleButtonClick}
-              className="absolute left-1/2 -translate-x-1/2 px-8 py-4 bg-blue-500 hover:bg-blue-600 rounded-lg text-white text-lg font-bold shadow-xl border-2 border-blue-400 pointer-events-auto"
-              style={{ top: "65%", transform: "translateX(-50%)", transformOrigin: "center center" }}
+              className="absolute left-1/2 px-8 py-4 bg-blue-500 hover:bg-blue-600 rounded-lg text-white text-lg font-bold shadow-xl border-2 border-blue-400 pointer-events-auto"
+              style={{ top: "65%", transformOrigin: "center center" }}
+              initial={{ x: "-50%" }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -48,6 +48,7 @@ export function GameHomepageScene() {
                             completedMissions.includes("mission-2") && 
                             completedMissions.includes("mission-3");
   const chapter2Completed = completedMissions.includes("mission-4");
+  const chapter3Completed = completedMissions.includes("mission-5");
 
   const handleChapterClick = (chapterId: string) => {
     if (chapterId === "chapter-1") {
@@ -91,7 +92,7 @@ export function GameHomepageScene() {
       accentColor: "#A4755A",
       imageUrl: "/images/zhuye3.png",
       unlocked: devMode || chapter2Completed,
-      completed: false,
+      completed: chapter3Completed,
     },
   ];
 

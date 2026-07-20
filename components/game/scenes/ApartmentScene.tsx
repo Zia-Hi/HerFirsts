@@ -225,7 +225,7 @@ export function ApartmentScene() {
 
     if (!welcomeShown) {
       setTimeout(() => {
-        setSubtitle("欢迎来到你的小家！");
+        setSubtitle("Welcome to your new apartment.");
       }, 2000);
 
       setTimeout(() => {

@@ -149,7 +149,7 @@ export function WifiMissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回 MENU
+              返回 HOME
             </motion.button>
           </motion.div>
         )}

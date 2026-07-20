@@ -34,9 +34,9 @@ export function KnowledgeNotebook({ open, card: externalCard, onClose }: Knowled
       {card ? (
         <motion.div
           key="card-detail"
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.5 }}
           className="fixed inset-0 z-[60] flex items-center justify-center p-4"
         >
@@ -164,16 +164,19 @@ export function KnowledgeNotebook({ open, card: externalCard, onClose }: Knowled
       ) : (
         <motion.div
           key="card-list"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.3 }}
-          className="fixed left-1/2 top-1/2 z-50 w-[90vw] max-w-3xl -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-2xl overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 50%, #dcc4a0 100%)",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
+          <div
+            className="w-[90vw] max-w-3xl rounded-xl shadow-2xl overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 50%, #dcc4a0 100%)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+            }}
+          >
           <div className="p-6 border-b border-[#8b7d6b]/30">
             <h2 className="font-game-serif text-2xl font-bold text-[#4a3a2a]">
               Notebook
@@ -235,6 +238,7 @@ export function KnowledgeNotebook({ open, card: externalCard, onClose }: Knowled
             >
               关闭 Notebook
             </button>
+          </div>
           </div>
         </motion.div>
       )}
