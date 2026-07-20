@@ -41,6 +41,7 @@ export type RepairPhaseType = "idle" | "rub" | "collect" | "prepare" | "pour-vin
 
 export type LightingPhaseType = 
   | "idle"
+  | "precaution"
   | "check-power"
   | "neighbor-check"
   | "circuit-box"

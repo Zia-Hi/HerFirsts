@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { FADE_DURATION_MS } from "@/lib/game/constants";
 import { useGameSettings } from "@/hooks/useGameStore";
 
@@ -26,6 +26,7 @@ export function FadeController({ children }: { children: ReactNode }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeDuration, setActiveDuration] = useState(FADE_DURATION_MS);
   const resolveRef = useRef<(() => void) | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const runTransition = useCallback(
     (targetOpacity: number, duration: number) => {
@@ -37,10 +38,22 @@ export function FadeController({ children }: { children: ReactNode }) {
           return;
         }
 
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
         resolveRef.current = resolve;
         setActiveDuration(duration);
         setIsTransitioning(true);
         setOpacity(targetOpacity);
+
+        timeoutRef.current = setTimeout(() => {
+          if (resolveRef.current) {
+            setIsTransitioning(false);
+            resolveRef.current();
+            resolveRef.current = null;
+          }
+        }, duration + 50);
       });
     },
     [],
@@ -61,9 +74,22 @@ export function FadeController({ children }: { children: ReactNode }) {
       return;
     }
 
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
     setIsTransitioning(false);
     resolveRef.current();
     resolveRef.current = null;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, []);
 
   return (

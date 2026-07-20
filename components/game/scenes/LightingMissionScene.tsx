@@ -53,6 +53,8 @@ export function LightingMissionScene() {
   const { play } = useGameAudio();
   const addCompletedMission = useGameStore((s) => s.addCompletedMission);
   const lightingToolsCollected = useGameStore((s) => s.lightingToolsCollected);
+  const lightingPrecautionShown = useGameStore((s) => s.lightingPrecautionShown);
+  const setLightingPrecautionShown = useGameStore((s) => s.setLightingPrecautionShown);
   const unlockLightingCard = useKnowledgeStore((s) => s.unlockLightingCard);
 
   const items = useInventoryStore((s) => s.items);
@@ -69,20 +71,29 @@ export function LightingMissionScene() {
   useEffect(() => {
     if (phase !== "idle") return;
 
-    if (hasAllTools && lightingToolsCollected) {
-      setPhase("prepare-ladder");
-    } else if (hasAllTools) {
-      setPhase("tools-collected");
+    if (lightingPrecautionShown) {
+      setTimeout(() => {
+        setPhase("start");
+      }, 500);
     } else {
       setTimeout(() => {
-        setPhase("check-power");
-        setCurrentImage(1);
-        setShowDialog("诶，怎么客厅里的灯不亮了？");
+        setPhase("precaution");
       }, 500);
     }
-  }, [hasAllTools, lightingToolsCollected]);
+  }, [hasAllTools, lightingToolsCollected, lightingPrecautionShown]);
 
   useEffect(() => {
+    if (phase !== "precaution") return;
+
+    setTimeout(() => {
+      setShowButton(true);
+      setButtonText("我已了解");
+    }, 500);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase === "idle" || phase === "precaution") return;
+
     switch (phase) {
       case "check-power":
         setTimeout(() => {
@@ -316,6 +327,19 @@ export function LightingMissionScene() {
     setShowDialog(null);
 
     switch (phase) {
+      case "precaution":
+        setLightingPrecautionShown(true);
+        if (hasAllTools && lightingToolsCollected) {
+          setPhase("prepare-ladder");
+        } else if (hasAllTools) {
+          setPhase("tools-collected");
+        } else {
+          setPhase("check-power");
+          setCurrentImage(1);
+          setShowDialog("诶，怎么客厅里的灯不亮了？");
+        }
+        break;
+
       case "check-power":
         setPhase("neighbor-check");
         break;
@@ -717,6 +741,63 @@ export function LightingMissionScene() {
       </AnimatePresence>
 
       {renderDragInteraction()}
+
+      <AnimatePresence>
+        {phase === "precaution" && (
+          <motion.div
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="relative w-[90%] max-w-lg bg-[#f5e6d3] rounded-2xl shadow-2xl p-6 sm:p-8"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="border-b-2 border-[#dcc4a0] pb-4 mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#5d4a37]">操作前先确认安全</h2>
+              </div>
+              
+              <ul className="space-y-3 mb-6 text-[#5d4a37] text-base">
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 mt-1">•</span>
+                  <span>准备手电筒或备用照明；</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 mt-1">•</span>
+                  <span>操作灯具前，先关闭对应电路；</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 mt-1">•</span>
+                  <span>不确定电路状态或缺乏相关知识时，不要贸然操作；</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 mt-1">•</span>
+                  <span>若出现烧焦气味、火花、异常发热或裸露线路，应立即停止并联系专业人员。</span>
+                </li>
+              </ul>
+
+              <div className="border-t border-[#dcc4a0] pt-4 mb-6">
+                <p className="text-[#5d4a37]/70 text-sm">
+                  本关提供的是一种基础排查思路，不代表所有灯具故障的唯一处理方式。实际情况可能因灯具类型、电路结构和故障原因而不同，请以现场安全状况为准。
+                </p>
+              </div>
+
+              <motion.button
+                type="button"
+                onClick={handleButtonClick}
+                className="w-full py-3 bg-[#5d4a37] text-white text-lg font-serif tracking-[0.15em] uppercase hover:bg-[#4a3a2a] transition-colors rounded-full shadow-lg"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                我已了解
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="absolute left-4 top-4 z-30">
         <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4">

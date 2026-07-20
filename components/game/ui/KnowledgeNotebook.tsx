@@ -41,7 +41,7 @@ export function KnowledgeNotebook({ open, card: externalCard, onClose }: Knowled
           className="fixed inset-0 z-[60] flex items-center justify-center p-4"
         >
           <div
-            className="relative max-w-xl w-full max-h-[85vh] flex flex-col"
+            className="relative max-w-2xl w-full max-h-[90vh] flex flex-col rounded-xl"
             style={{
               background:
                 "linear-gradient(135deg, #fdfbf7 0%, #f5e6d3 50%, #e8d5b7 100%)",
@@ -56,9 +56,9 @@ export function KnowledgeNotebook({ open, card: externalCard, onClose }: Knowled
               ✕
             </button>
             
-            <div className="flex-1 flex flex-col max-h-[85vh] overflow-hidden">
-              <div className="p-6 pt-14 border-4 border-[#8b7d6b]/20 flex flex-col h-full">
-                <div className="flex-1 overflow-y-auto pr-2" style={{
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 p-6 pt-14 border-4 border-[#8b7d6b]/20 flex flex-col overflow-hidden">
+                <div className="flex-1 overflow-y-auto pr-3 pb-4" style={{
                   scrollbarWidth: 'thin',
                   scrollbarColor: '#c4a77d #f5e6d3'
                 }}>

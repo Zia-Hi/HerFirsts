@@ -8,3 +8,4 @@ export { KnowledgeNotebook, FailureHint } from "./KnowledgeNotebook";
 export { ConfirmDialog } from "./ConfirmDialog";
 export { SettingsButton, SettingsPanel } from "./SettingsPanel";
 export { LetterModal } from "./LetterModal";
+export { SceneContainer, ResponsiveGrid } from "./SceneContainer";

@@ -161,16 +161,27 @@ export function HotelMissionCompletedScene() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="relative max-w-2xl w-full mx-4 max-h-[80vh] flex flex-col"
+              className="relative max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col"
               style={{
                 background:
                   "linear-gradient(135deg, #fdfbf7 0%, #f5e6d3 50%, #e8d5b7 100%)",
                 boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
               }}
             >
-              <div className="flex-1 flex flex-col max-h-[80vh] overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setShowSkillCard(false)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-[#5d4a37]/80 text-white rounded-full hover:bg-[#5d4a37] transition-colors"
+              >
+                ✕
+              </button>
+
+              <div className="flex-1 flex flex-col max-h-[90vh] overflow-hidden">
                 <div className="p-8 border-4 border-[#8b7d6b]/20 flex flex-col h-full" style={{ backgroundImage: "repeating-linear-gradient(transparent, transparent 28px, rgba(139,125,107,0.06) 28px, rgba(139,125,107,0.06) 29px)" }}>
-                  <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#c4a77d] scrollbar-track-[#f5e6d3]">
+                  <div className="flex-1 overflow-y-auto pr-2" style={{
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: '#c4a77d #f5e6d3'
+                  }}>
                     <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#8b7d6b]/30">
                       <h2 className="font-game-serif text-3xl font-bold text-[#4a3a2a]">
                         防偷拍检查技能卡

@@ -443,7 +443,7 @@ export function OpeningScene() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="font-game-serif text-6xl md:text-8xl font-bold text-cream-100 tracking-[0.3em] uppercase mb-12"
+              className="font-game-serif text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-cream-100 tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-8 sm:mb-12"
               style={{ textShadow: "0 4px 30px rgba(0,0,0,0.8)" }}
             >
               Home
@@ -453,12 +453,12 @@ export function OpeningScene() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="flex flex-col gap-6"
+              className="flex flex-col gap-4 sm:gap-6"
             >
               <motion.button
                 type="button"
                 onClick={handleStart}
-                className="px-16 py-4 bg-[#5d4a37] text-white text-2xl font-serif tracking-[0.2em] uppercase hover:bg-[#4a3a2a] transition-colors rounded-full shadow-xl"
+                className="px-8 sm:px-12 md:px-16 py-3 sm:py-4 bg-[#5d4a37] text-white text-lg sm:text-xl md:text-2xl font-serif tracking-[0.15em] sm:tracking-[0.2em] uppercase hover:bg-[#4a3a2a] transition-colors rounded-full shadow-xl"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -468,7 +468,7 @@ export function OpeningScene() {
               <motion.button
                 type="button"
                 onClick={handleNotebook}
-                className="px-16 py-4 bg-white/10 text-white text-2xl font-serif tracking-[0.2em] uppercase hover:bg-white/20 transition-colors rounded-full shadow-xl border border-white/30"
+                className="px-8 sm:px-12 md:px-16 py-3 sm:py-4 bg-white/10 text-white text-lg sm:text-xl md:text-2xl font-serif tracking-[0.15em] sm:tracking-[0.2em] uppercase hover:bg-white/20 transition-colors rounded-full shadow-xl border border-white/30"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

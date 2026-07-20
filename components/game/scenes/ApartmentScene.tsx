@@ -157,12 +157,17 @@ export function ApartmentScene() {
   const setInventoryHintShown = useGameStore((s) => s.setInventoryHintShown);
   const completedMissions = useGameStore((s) => s.completedMissions);
   const mission2Started = useGameStore((s) => s.mission2Started);
+  const chapter1LetterPending = useGameStore((s) => s.chapter1LetterPending);
+  const chapter1LetterShown = useGameStore((s) => s.chapter1LetterShown);
+  const setChapter1LetterPending = useGameStore((s) => s.setChapter1LetterPending);
+  const setChapter1LetterShown = useGameStore((s) => s.setChapter1LetterShown);
 
   const isToolboxLocked = !completedMissions.includes("mission-2");
   const [showToolboxLockedHint, setShowToolboxLockedHint] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [letterAutoShown, setLetterAutoShown] = useState(false);
   const [isLetterAutoOpen, setIsLetterAutoOpen] = useState(false);
+  const [showMissionList, setShowMissionList] = useState(false);
   const lightingToolsCollected = useGameStore((s) => s.lightingToolsCollected);
   const addItem = useInventoryStore((s) => s.addItem);
 
@@ -209,12 +214,13 @@ export function ApartmentScene() {
       setShowLabels(true);
     }, 500);
 
-    if (isChapter1Completed && !letterAutoShown) {
+    if (chapter1LetterPending && !chapter1LetterShown) {
       setTimeout(() => {
         setShowLetter(true);
         setIsLetterAutoOpen(true);
-        setLetterAutoShown(true);
-      }, 1500);
+        setChapter1LetterShown(true);
+        setChapter1LetterPending(false);
+      }, 1000);
     }
 
     if (!welcomeShown) {
@@ -511,6 +517,131 @@ export function ApartmentScene() {
           Home
         </span>
       </motion.button>
+
+      <motion.button
+        type="button"
+        onClick={() => {
+          play("ui-confirm");
+          setShowMissionList(!showMissionList);
+        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.8 }}
+        className="absolute right-4 top-[300px] z-30 flex flex-col items-center hover:scale-110 transition-transform"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        title="查看关卡"
+      >
+        <div className="w-12 h-12 bg-[#f5e6d3] border-2 border-[#dcc4a0] rounded-lg shadow-lg flex items-center justify-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#5d4a37"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="3" x2="21" y1="10" y2="10" />
+            <line x1="9" x2="9" y1="15" y2="15" />
+            <line x1="15" x2="15" y1="15" y2="15" />
+          </svg>
+        </div>
+        <span className="font-game-sans mt-1 block text-center text-[10px] uppercase tracking-widest text-cream-100 opacity-90">
+          关卡
+        </span>
+      </motion.button>
+
+      <AnimatePresence>
+        {showMissionList && (
+          <motion.div
+            key="mission-list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowMissionList(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#f5e6d3] rounded-xl shadow-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-4 pb-4 border-b-2 border-[#dcc4a0]">
+                <h2 className="font-game-serif text-xl font-bold text-[#5d4a37]">Chapter 1 关卡列表</h2>
+                <button
+                  type="button"
+                  onClick={() => setShowMissionList(false)}
+                  className="w-8 h-8 bg-[#5d4a37]/80 text-white rounded-full flex items-center justify-center hover:bg-[#5d4a37] transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  {
+                    id: "mission-1",
+                    name: "疏通堵塞的花洒",
+                    subtitle: "Unclogging the Shower",
+                    completed: completedMissions.includes("mission-1"),
+                    status: completedMissions.includes("mission-1") ? "已完成" : "可开始",
+                    statusColor: completedMissions.includes("mission-1") ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700",
+                  },
+                  {
+                    id: "mission-2",
+                    name: "Wi-Fi信号优化",
+                    subtitle: "Wi-Fi Optimization",
+                    completed: completedMissions.includes("mission-2"),
+                    status: completedMissions.includes("mission-2") ? "已完成" : (completedMissions.includes("mission-1") ? "可开始" : "暂未开放"),
+                    statusColor: completedMissions.includes("mission-2") ? "bg-green-100 text-green-700" : (completedMissions.includes("mission-1") ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"),
+                  },
+                  {
+                    id: "mission-3",
+                    name: "客厅灯具维修",
+                    subtitle: "Lighting Repair",
+                    completed: completedMissions.includes("mission-3"),
+                    status: completedMissions.includes("mission-3") ? "已完成" : (completedMissions.includes("mission-2") ? "可开始" : "暂未开放"),
+                    statusColor: completedMissions.includes("mission-3") ? "bg-green-100 text-green-700" : (completedMissions.includes("mission-2") ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"),
+                  },
+                ].map((mission) => (
+                  <div
+                    key={mission.id}
+                    className="flex items-center justify-between px-4 py-3 bg-[#FDFBF8] rounded-lg border border-[#E8D8C4]"
+                  >
+                    <div>
+                      <p className="font-semibold text-[#5D4A37] text-sm">{mission.name}</p>
+                      <p className="text-[10px] text-[#8B7A6A]">{mission.subtitle}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] px-2 py-1 rounded-full ${mission.statusColor}`}>
+                        {mission.status}
+                      </span>
+                      {mission.completed && (
+                        <svg viewBox="0 0 24 24" className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-[#dcc4a0] flex justify-between items-center">
+                <span className="text-sm text-[#8B7A6A]">
+                  完成进度: {completedMissions.filter(m => ["mission-1", "mission-2", "mission-3"].includes(m)).length} / 3
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <DustParticles count={15} className="opacity-40" />
 

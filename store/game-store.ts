@@ -16,6 +16,9 @@ interface GameStoreState {
   mission2Started: boolean;
   lightingEventShown: boolean;
   lightingToolsCollected: boolean;
+  lightingPrecautionShown: boolean;
+  chapter1LetterPending: boolean;
+  chapter1LetterShown: boolean;
   devMode: boolean;
 }
 
@@ -33,6 +36,9 @@ interface GameStoreActions {
   setMission2Started: (started: boolean) => void;
   setLightingEventShown: (shown: boolean) => void;
   setLightingToolsCollected: (collected: boolean) => void;
+  setLightingPrecautionShown: (shown: boolean) => void;
+  setChapter1LetterPending: (pending: boolean) => void;
+  setChapter1LetterShown: (shown: boolean) => void;
   getSnapshot: () => GameStateSnapshot;
   hydrate: (state: Partial<GameStoreState>) => void;
   reset: () => void;
@@ -54,6 +60,9 @@ const initialState: GameStoreState = {
   mission2Started: false,
   lightingEventShown: false,
   lightingToolsCollected: false,
+  lightingPrecautionShown: false,
+  chapter1LetterPending: false,
+  chapter1LetterShown: false,
   devMode: false,
 };
 
@@ -92,9 +101,15 @@ export const useGameStore = create<GameStoreState & GameStoreActions>((set, get)
 
   setLightingToolsCollected: (lightingToolsCollected) => set({ lightingToolsCollected }),
 
+  setLightingPrecautionShown: (lightingPrecautionShown) => set({ lightingPrecautionShown }),
+
+  setChapter1LetterPending: (chapter1LetterPending) => set({ chapter1LetterPending }),
+
+  setChapter1LetterShown: (chapter1LetterShown) => set({ chapter1LetterShown }),
+
   getSnapshot: () => {
-    const { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected } = get();
-    return { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected };
+    const { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected, lightingPrecautionShown } = get();
+    return { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected, lightingPrecautionShown };
   },
 
   hydrate: (state) =>
