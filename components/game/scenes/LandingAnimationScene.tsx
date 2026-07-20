@@ -48,7 +48,7 @@ export function LandingAnimationScene() {
         className="absolute inset-0"
       >
         <motion.img
-          src="/images/shouyeback.png"
+          src="/images/shouyebackp.png"
           alt="Landing Background"
           className="w-full h-full object-cover"
           animate={showContent ? {

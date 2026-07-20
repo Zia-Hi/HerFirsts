@@ -99,7 +99,7 @@ export function GameHomepageScene() {
   return (
     <div className="relative h-full w-full overflow-hidden">
       <img
-        src="/images/shouyeback1.jpg"
+        src="/images/zhuyeback1.jpg"
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover blur-sm"
         style={{ filter: "blur(4px) brightness(0.95)" }}
