@@ -7,10 +7,12 @@ import { useSceneTransition } from "@/hooks/useSceneTransition";
 import { useGameStore } from "@/store/game-store";
 import { useKnowledgeStore } from "@/store/knowledge-store";
 import { KnowledgeNotebook, SettingsPanel } from "@/components/game/ui";
+import { audioManager } from "@/lib/game/audio-manager";
 
 export function GameHomepageScene() {
   const [showContent, setShowContent] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   const { transitionToScene } = useSceneTransition();
   const { completedMissions, devMode } = useGameStore();
@@ -20,6 +22,26 @@ export function GameHomepageScene() {
     setTimeout(() => {
       setShowContent(true);
     }, 300);
+
+    const handleInteraction = () => {
+      audioManager.unlock();
+      if (!audioManager.isPlaying("background-music")) {
+        audioManager.play("background-music", { channel: "music", loop: true, volume: 0.6 });
+      }
+      document.removeEventListener("click", handleInteraction);
+      document.removeEventListener("touchstart", handleInteraction);
+      document.removeEventListener("keydown", handleInteraction);
+    };
+
+    document.addEventListener("click", handleInteraction);
+    document.addEventListener("touchstart", handleInteraction);
+    document.addEventListener("keydown", handleInteraction);
+
+    return () => {
+      document.removeEventListener("click", handleInteraction);
+      document.removeEventListener("touchstart", handleInteraction);
+      document.removeEventListener("keydown", handleInteraction);
+    };
   }, []);
 
   const chapter1Completed = completedMissions.includes("mission-1") && 
@@ -131,6 +153,18 @@ export function GameHomepageScene() {
             </span>
           )}
         </motion.button>
+
+        <motion.button
+          type="button"
+          onClick={() => setShowAbout(true)}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
+        >
+          <span className="text-[#5d4a37] font-game-serif text-xl">ℹ️</span>
+          <span className="text-sm text-[#5D4A37] font-medium">About</span>
+        </motion.button>
       </div>
 
       <motion.div
@@ -192,6 +226,74 @@ export function GameHomepageScene() {
         onClose={closeNotebook}
       />
       <SettingsPanel open={showSettings} onClose={() => setShowSettings(false)} />
+
+      {showAbout && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => setShowAbout(false)}
+        >
+          <motion.div
+            className="relative w-[90%] max-w-2xl bg-[#f5e6d3] rounded-2xl shadow-2xl p-6 sm:p-8"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="border-b-2 border-[#dcc4a0] pb-4 mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#5d4a37]">关于 Her Firsts</h2>
+            </div>
+            
+            <div className="max-h-[60vh] overflow-y-auto pr-2 space-y-6 text-[#5d4a37] text-base leading-relaxed">
+              <p>
+                离开校园、背井离乡来到陌生城市，作为刚毕业的年轻女性，你签下人生第一份租房合同。当钥匙插入门锁、推开出租屋大门的那一刻，望着陌生的家具与空间，你突然意识到：曾经由父母、家庭替你承担的一切，正在成为属于你自己的「生存时间」。
+              </p>
+              <p>
+                这是一段充满未知、意外与挑战的时间。
+              </p>
+              <p>
+                花洒突然漏水、房间灯具失灵、路由器断网，面对出租屋里的突发故障，第一次独自生活的你措手不及，却不知道该向谁求助；进入职场后，电脑卡顿、磁盘爆满、系统故障，又成为新人必须面对的问题；独自出差入住酒店时，也可能因为担心隐藏摄像头等安全隐患，而无法真正放松。
+              </p>
+              <p>
+                这些看似微小的瞬间，却构成了无数年轻女性走向独立过程中真实存在的焦虑。
+              </p>
+              <p>
+                在我们的理解里，「生存时间」是为了维持生活而不得不付出的时间。它常常由外部需求驱动，伴随着被动感、压力感和「不知道该怎么办」的无力感：你并不是主动选择去处理这些问题，而是生活把它们推到你面前，逼着你在有限的经验里迅速应对。
+              </p>
+              <p>
+                而我们希望探索的问题是：
+              </p>
+              <p>
+                如果这些人生第一次，都能在真正到来之前先演练一次呢？当原本只能被动面对的生活挑战，能够提前在安全环境中被体验、被拆解、被学习，关于「第一次」的焦虑，是否就能逐渐转化为面对未知的信心？
+              </p>
+              <p>
+                于是，我们创造了Her Firsts。
+              </p>
+              <p>
+                Her Firsts 是一款女性向生活情境模拟游戏，通过数字化交互与沉浸式体验构建一个安全、低成本、可反复试错的虚拟成长空间，让女性能够在面对现实生活之前，提前体验那些曾经令人害怕的「第一次」。
+              </p>
+              <p>
+                我们希望将生存时间，从被迫应对的焦虑时刻，转化为主动掌握的成长过程。
+              </p>
+            </div>
+
+            <div className="mt-6 pt-4 border-t-2 border-[#dcc4a0] flex justify-end">
+              <motion.button
+                type="button"
+                onClick={() => setShowAbout(false)}
+                className="px-6 py-2 bg-[#5d4a37] text-white rounded-lg hover:bg-[#4a3a2a] transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                关闭
+              </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }

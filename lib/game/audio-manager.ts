@@ -23,6 +23,8 @@ class AudioManagerService {
   private masterGain: GainNode | null = null;
   private channelGains = new Map<AudioChannelId, GainNode>();
   private initialized = false;
+  private bgmAudio: HTMLAudioElement | null = null;
+  private bgmFadeTimer: number | null = null;
 
   initialize(): void {
     if (this.initialized) return;
@@ -114,11 +116,17 @@ class AudioManagerService {
     return this.channelGains.get(channelId) ?? null;
   }
 
+  unlock(): void {
+    const ctx = this.ensureContext();
+    if (ctx.state === "suspended") {
+      void ctx.resume();
+    }
+  }
+
   play(clipId: AudioClipId, options: AudioPlayOptions): void {
     if (typeof window === "undefined") return;
 
     this.initialize();
-    this.stop(clipId);
     const ctx = this.ensureContext();
     if (ctx.state === "suspended") {
       void ctx.resume();
@@ -133,9 +141,14 @@ class AudioManagerService {
     if (!channelGain) return;
 
     if (clipId === "background-music") {
-      void this.playBackgroundMusic(ctx, channelGain, volume, loop);
+      if (this.bgmAudio && !this.bgmAudio.paused) {
+        return;
+      }
+      this.playBackgroundMusic(ctx, channelGain, volume, loop);
       return;
     }
+
+    this.stop(clipId);
 
     const { nodes, stopFn } = this.synthesizeClip(clipId, ctx, channelGain, volume, loop);
 
@@ -147,47 +160,67 @@ class AudioManagerService {
     });
   }
 
-  private async playBackgroundMusic(
+  private playBackgroundMusic(
     ctx: AudioContext,
     destination: GainNode,
     volume: number,
     loop: boolean,
-  ): Promise<void> {
+  ): void {
     try {
+      if (this.bgmAudio) {
+        this.bgmAudio.pause();
+        this.bgmAudio = null;
+      }
+
       const audio = new Audio("/audio/music.mp4");
-      audio.volume = volume;
+      audio.preload = "auto";
       audio.crossOrigin = "anonymous";
 
       const source = ctx.createMediaElementSource(audio);
       const gain = ctx.createGain();
-      gain.gain.value = 1;
+      gain.gain.value = 0;
 
       source.connect(gain);
       gain.connect(destination);
 
-      const handleTimeUpdate = () => {
-        if (!loop || !audio.duration) return;
+      const fadeDuration = 2;
 
-        const fadeOutDuration = 3;
+      const handleTimeUpdate = () => {
+        if (!audio.duration) return;
+
         const remaining = audio.duration - audio.currentTime;
 
-        if (remaining <= fadeOutDuration && remaining > 0) {
-          const fadeProgress = (fadeOutDuration - remaining) / fadeOutDuration;
-          const currentVolume = 1 - fadeProgress;
-          gain.gain.setTargetAtTime(currentVolume, ctx.currentTime, 0.1);
-        } else if (audio.currentTime < 1) {
-          const fadeInProgress = Math.min(audio.currentTime, 1);
-          const currentVolume = fadeInProgress;
-          gain.gain.setTargetAtTime(currentVolume, ctx.currentTime, 0.1);
+        if (remaining <= fadeDuration && remaining > 0) {
+          const fadeProgress = (fadeDuration - remaining) / fadeDuration;
+          gain.gain.setTargetAtTime(volume * (1 - fadeProgress), ctx.currentTime, 0.05);
+        } else if (audio.currentTime < fadeDuration) {
+          const fadeInProgress = audio.currentTime / fadeDuration;
+          gain.gain.setTargetAtTime(volume * fadeInProgress, ctx.currentTime, 0.05);
         } else {
-          gain.gain.setTargetAtTime(1, ctx.currentTime, 0.1);
+          gain.gain.setTargetAtTime(volume, ctx.currentTime, 0.05);
         }
       };
 
-      audio.addEventListener("timeupdate", handleTimeUpdate);
+      const handleEnded = () => {
+        if (!loop) return;
+        
+        gain.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
+        
+        setTimeout(() => {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }, fadeDuration * 1000);
+      };
 
-      audio.loop = true;
-      await audio.play();
+      audio.addEventListener("timeupdate", handleTimeUpdate);
+      audio.addEventListener("ended", handleEnded);
+      audio.loop = false;
+
+      audio.play().catch((error) => {
+        console.warn("Auto-play blocked, waiting for user interaction:", error);
+      });
+
+      this.bgmAudio = audio;
 
       this.activeSounds.set("background-music", {
         clipId: "background-music",
@@ -196,10 +229,12 @@ class AudioManagerService {
         audioElement: audio,
         stopFn: () => {
           audio.removeEventListener("timeupdate", handleTimeUpdate);
+          audio.removeEventListener("ended", handleEnded);
           audio.pause();
           audio.currentTime = 0;
           source.disconnect();
           gain.disconnect();
+          this.bgmAudio = null;
         },
       });
     } catch (error) {

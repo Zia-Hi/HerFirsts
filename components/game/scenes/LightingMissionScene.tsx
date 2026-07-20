@@ -664,7 +664,8 @@ export function LightingMissionScene() {
                   style={{
                     left: `calc(50% + ${x}px)`,
                     top: `calc(50% + ${y}px)`,
-                    transform: "translate(-50%, -50%)",
+                    marginLeft: "-50%",
+                    marginTop: "-50%",
                   }}
                   whileHover={!isSnapped ? { scale: 1.2 } : {}}
                   whileTap={{ scale: 0.9 }}
@@ -700,7 +701,8 @@ export function LightingMissionScene() {
                 style={{
                   left: `${pos.x}%`,
                   top: `${pos.y}%`,
-                  transform: "translate(-50%, -50%)",
+                  marginLeft: "-50%",
+                  marginTop: "-50%",
                 }}
                 whileHover={!isCollected ? { scale: 1.15 } : {}}
                 whileTap={!isCollected ? { scale: 0.9 } : {}}

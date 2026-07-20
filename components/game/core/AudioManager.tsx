@@ -27,31 +27,5 @@ export function AudioManager() {
     });
   }, [settings]);
 
-  useEffect(() => {
-    const handlePlay = () => {
-      if (!audioManager.isPlaying("background-music")) {
-        audioManager.play("background-music", {
-          channel: "music",
-          loop: true,
-          volume: 0.6,
-        });
-      }
-    };
-
-    const handleFirstInteraction = () => {
-      handlePlay();
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("touchstart", handleFirstInteraction);
-    };
-
-    document.addEventListener("click", handleFirstInteraction);
-    document.addEventListener("touchstart", handleFirstInteraction);
-
-    return () => {
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("touchstart", handleFirstInteraction);
-    };
-  }, []);
-
   return null;
 }

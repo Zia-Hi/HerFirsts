@@ -44,7 +44,7 @@ export function InventoryPanel({
               key={item.id}
               type="button"
               onClick={() => isTool && onSelectItem(item.id as ToolId)}
-              whileHover={{ x: -6 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
               className={`flex items-center gap-3 border-l-4 px-4 py-3 transition-colors rounded-r-lg shadow-md ${
                 isHeld
