@@ -38,6 +38,7 @@ export function HotelMissionScene() {
   const [isZooming, setIsZooming] = useState(false);
   const [showRedDot, setShowRedDot] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [foundAbnormal, setFoundAbnormal] = useState(false);
 
   const { transitionToScene } = useSceneTransition();
   const { play, stop } = useGameAudio();
@@ -149,33 +150,67 @@ export function HotelMissionScene() {
       }
 
       setTimeout(() => {
-        if (area.normal) {
-          showDialog(`${area.name}看起来一切正常。${area.hint}`);
-          setInspectedAreas([...inspectedAreas, areaId]);
-          setTimeout(() => {
-            hideDialog();
-            setCurrentInspectArea(null);
-            setCurrentImage("/pinterest/hotel/hotel_5.jpg");
-          }, 3500);
-        } else {
+        const newInspectedAreas = [...inspectedAreas, areaId];
+        setInspectedAreas(newInspectedAreas);
+        
+        if (!area.normal) {
+          setFoundAbnormal(true);
           showDialog("等等！这个烟雾报警器有点不对劲...");
-          setInspectedAreas([...inspectedAreas, areaId]);
           
           setTimeout(() => {
             hideDialog();
             setShowRedDot(false);
-            setPhase("step3");
-            setTimeout(() => {
-              showDialog("仔细观察：<br/>• 有一个红色的发光点<br/>• 表面有一个不符合设计的小圆孔<br/>• 小孔的位置正对床铺<br/>• 内部隐约可见类似镜头的结构");
+            
+            if (newInspectedAreas.length === INSPECT_AREAS.length) {
+              setPhase("step3");
               setTimeout(() => {
-                setShowChoices(true);
-              }, 2000);
-            }, 500);
+                showDialog("仔细观察：<br/>• 有一个红色的发光点<br/>• 表面有一个不符合设计的小圆孔<br/>• 小孔的位置正对床铺<br/>• 内部隐约可见类似镜头的结构");
+                setTimeout(() => {
+                  setShowChoices(true);
+                }, 2000);
+              }, 500);
+            } else {
+              showDialog("先检查完所有区域，再决定下一步怎么做。");
+              setTimeout(() => {
+                hideDialog();
+                setCurrentInspectArea(null);
+                setCurrentImage("/pinterest/hotel/hotel_5.jpg");
+              }, 3000);
+            }
+          }, 3500);
+        } else {
+          showDialog(`${area.name}看起来一切正常。${area.hint}`);
+          setTimeout(() => {
+            hideDialog();
+            setCurrentInspectArea(null);
+            setCurrentImage("/pinterest/hotel/hotel_5.jpg");
+            
+            if (newInspectedAreas.length === INSPECT_AREAS.length && foundAbnormal) {
+              setTimeout(() => {
+                const smokeArea = INSPECT_AREAS.find((a) => a.id === "smoke");
+                if (smokeArea) {
+                  setCurrentImage(smokeArea.image);
+                  setTimeout(() => {
+                    showDialog("嗯，那有问题的就是烟雾报警器");
+                    setTimeout(() => {
+                      hideDialog();
+                      setPhase("step3");
+                      setTimeout(() => {
+                        showDialog("仔细观察：<br/>• 有一个红色的发光点<br/>• 表面有一个不符合设计的小圆孔<br/>• 小孔的位置正对床铺<br/>• 内部隐约可见类似镜头的结构");
+                        setTimeout(() => {
+                          setShowChoices(true);
+                        }, 2000);
+                      }, 500);
+                    }, 3000);
+                  }, 1000);
+                }
+              }, 500);
+            }
           }, 3500);
         }
       }, 1800);
     }, 400);
-  }, [inspectedAreas, play, showDialog, hideDialog]);
+  }, [inspectedAreas, play, showDialog, hideDialog, foundAbnormal]);
 
   const handleChoice = useCallback((choice: string) => {
     setShowChoices(false);

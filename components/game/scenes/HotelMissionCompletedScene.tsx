@@ -105,7 +105,7 @@ export function HotelMissionCompletedScene() {
                 textShadow: "0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.4)",
               }}
             >
-              Mission Complete
+              Mission 5 Completed
             </h1>
           </motion.div>
         )}
