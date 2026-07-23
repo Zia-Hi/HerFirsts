@@ -49,4 +49,5 @@ export const SCENE_IDS = {
   HOTEL_ROOM: "hotel-room",
   HOTEL_MISSION: "hotel-mission",
   HOTEL_MISSION_COMPLETED: "hotel-mission-completed",
+  FORUM: "forum",
 } as const;

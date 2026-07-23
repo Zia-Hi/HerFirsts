@@ -167,6 +167,18 @@ export function GameHomepageScene() {
           <span className="text-[#5d4a37] font-game-serif text-xl">ℹ️</span>
           <span className="text-sm text-[#5D4A37] font-medium">About</span>
         </motion.button>
+
+        <motion.button
+          type="button"
+          onClick={() => void transitionToScene(SCENE_IDS.FORUM)}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
+        >
+          <span className="text-[#5d4a37] font-game-serif text-xl">💬</span>
+          <span className="text-sm text-[#5D4A37] font-medium">Forum</span>
+        </motion.button>
       </div>
 
       <motion.div

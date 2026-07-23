@@ -52,6 +52,16 @@ export function HotelMissionScene() {
     };
   }, [play, stop]);
 
+  const showDialog = useCallback((text: string) => {
+    setCurrentDialog(text);
+    setDialogVisible(true);
+  }, []);
+
+  const hideDialog = useCallback(() => {
+    setDialogVisible(false);
+    setCurrentDialog(null);
+  }, []);
+
   useEffect(() => {
     if (phase === "intro") {
       setTimeout(() => {
@@ -66,17 +76,7 @@ export function HotelMissionScene() {
         }, 3000);
       }, 1000);
     }
-  }, [phase]);
-
-  const showDialog = useCallback((text: string) => {
-    setCurrentDialog(text);
-    setDialogVisible(true);
-  }, []);
-
-  const hideDialog = useCallback(() => {
-    setDialogVisible(false);
-    setCurrentDialog(null);
-  }, []);
+  }, [phase, showDialog, hideDialog]);
 
   const handleLightsOff = useCallback(() => {
     hideDialog();
@@ -85,7 +85,7 @@ export function HotelMissionScene() {
     setTimeout(() => {
       showDialog("灯光已关闭。接下来，请拉上窗帘，让房间保持较暗的状态。");
     }, 1500);
-  }, [hideDialog, play]);
+  }, [hideDialog, play, showDialog]);
 
   const handleCloseCurtains = useCallback(() => {
     hideDialog();
@@ -105,7 +105,7 @@ export function HotelMissionScene() {
         }, 2500);
       }, 1000);
     }, 1500);
-  }, [hideDialog, play]);
+  }, [hideDialog, play, showDialog]);
 
   const handleStartInspect = useCallback(() => {
     hideDialog();
@@ -114,7 +114,7 @@ export function HotelMissionScene() {
     setTimeout(() => {
       showDialog("点击下方的区域进行检查，看看哪里有异常：");
     }, 500);
-  }, [hideDialog, play]);
+  }, [hideDialog, play, showDialog]);
 
   const getStepStatus = useCallback((stepId: string): "completed" | "current" | "locked" => {
     if (phase === "intro") return "locked";

@@ -22,6 +22,7 @@ import { HotelScene } from "@/components/game/scenes/HotelScene";
 import { HotelRoomScene } from "@/components/game/scenes/HotelRoomScene";
 import { HotelMissionScene } from "@/components/game/scenes/HotelMissionScene";
 import { HotelMissionCompletedScene } from "@/components/game/scenes/HotelMissionCompletedScene";
+import { ForumScene } from "@/components/game/scenes/ForumScene";
 import { registerScene, SCENE_IDS, GAME_STORAGE_KEY } from "@/lib/game";
 import { audioManager } from "@/lib/game/audio-manager";
 import { saveManager, useGameStore } from "@/store";
@@ -50,6 +51,7 @@ function registerAllScenes() {
   registerScene({ id: SCENE_IDS.HOTEL_ROOM, component: HotelRoomScene });
   registerScene({ id: SCENE_IDS.HOTEL_MISSION, component: HotelMissionScene });
   registerScene({ id: SCENE_IDS.HOTEL_MISSION_COMPLETED, component: HotelMissionCompletedScene });
+  registerScene({ id: SCENE_IDS.FORUM, component: ForumScene });
 }
 
 let scenesRegistered = false;
@@ -81,7 +83,7 @@ export function GameBootstrap() {
     setSaveLoaded(true);
     void transitionToScene(SCENE_IDS.LANDING_ANIMATION);
 
-    const handleInteraction = (e: Event) => {
+    const handleInteraction = () => {
       if (!audioInitialized) {
         audioManager.initialize();
         audioInitialized = true;
@@ -107,7 +109,7 @@ export function GameBootstrap() {
         console.log("🎯 All missions completed!");
       }
       
-      handleInteraction(e);
+      handleInteraction();
     };
 
     window.addEventListener("click", handleInteraction);

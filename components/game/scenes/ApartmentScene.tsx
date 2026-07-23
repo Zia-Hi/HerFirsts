@@ -165,13 +165,10 @@ export function ApartmentScene() {
   const isToolboxLocked = !completedMissions.includes("mission-2");
   const [showToolboxLockedHint, setShowToolboxLockedHint] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
-  const [letterAutoShown, setLetterAutoShown] = useState(false);
+
   const [isLetterAutoOpen, setIsLetterAutoOpen] = useState(false);
   const [showMissionList, setShowMissionList] = useState(false);
   const lightingToolsCollected = useGameStore((s) => s.lightingToolsCollected);
-  const addItem = useInventoryStore((s) => s.addItem);
-
-  const isChapter1Completed = completedMissions.includes("mission-3");
 
   const notebookOpen = useKnowledgeStore((s) => s.notebookOpen);
   const cards = useKnowledgeStore((s) => s.cards);
@@ -243,7 +240,7 @@ export function ApartmentScene() {
       }, 8000);
     }
 
-    }, [welcomeShown, setWelcomeShown]);
+    }, [welcomeShown, setWelcomeShown, chapter1LetterPending, chapter1LetterShown, setChapter1LetterPending, setChapter1LetterShown]);
 
   const handleRoomClick = useCallback(
     (roomId: RoomId) => {
@@ -310,7 +307,7 @@ export function ApartmentScene() {
         }
       }
     },
-    [playerCanMove, play, missionStarted, transitionToScene, lockedRooms, needTools, hasVinegar, hasPlasticBag, addItem, lightingToolsCollected],
+    [playerCanMove, play, missionStarted, transitionToScene, lockedRooms, lightingToolsCollected, completedMissions, mission2Started],
   );
 
   const handlePickTool = useCallback(
@@ -450,7 +447,7 @@ export function ApartmentScene() {
         onClick={() => {
           play("ui-confirm");
           setShowLetter(true);
-          setLetterAutoShown(true);
+          setChapter1LetterShown(true);
         }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
