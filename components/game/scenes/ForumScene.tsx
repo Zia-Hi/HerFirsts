@@ -246,17 +246,21 @@ export function ForumScene() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {showReplyModal && selectedPost && (
-          <ReplyModal
-            key={selectedPost.id}
-            post={selectedPost}
-            onClose={() => {
-              setShowReplyModal(false);
-              setSelectedPost(null);
-            }}
-            onReply={(content) => handleReply(selectedPost.id, content)}
-          />
-        )}
+        {showReplyModal && selectedPost && (() => {
+          const currentPostId = selectedPost.id;
+          const currentPost = selectedPost;
+          return (
+            <ReplyModal
+              key={currentPostId}
+              post={currentPost}
+              onClose={() => {
+                setShowReplyModal(false);
+                setSelectedPost(null);
+              }}
+              onReply={(replyContent: string) => handleReply(currentPostId, replyContent)}
+            />
+          );
+        })()}
       </AnimatePresence>
     </div>
   );
