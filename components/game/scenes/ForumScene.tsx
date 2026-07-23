@@ -4,10 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSceneTransition } from "@/hooks/useSceneTransition";
 import { SCENE_IDS } from "@/lib/game";
-import { PostCard } from "../ui/PostCard";
-import { ReplyModal } from "../ui/ReplyModal";
-import { SearchBar } from "../ui/SearchBar";
-import { PostModal } from "../ui/PostModal";
+import { PostCard, ReplyModal, SearchBar, PostModal } from "../ui";
 import { ForumPost, Reply } from "../types/forum";
 import { getForumData, saveForumData, getOrCreateUserProfile } from "@/lib/forumStorage";
 
