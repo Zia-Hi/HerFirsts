@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 // Force dynamic rendering to prevent build-time errors
 export const dynamic = "force-dynamic";
@@ -16,6 +16,7 @@ export async function GET(request: Request) {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; username: string };
 
+    const prisma = await getPrisma();
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       include: { gameProgress: true },

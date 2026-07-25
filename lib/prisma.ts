@@ -5,17 +5,16 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-function getPrisma() {
+// Lazy initialization - only creates PrismaClient when actually needed
+// This prevents build-time errors on platforms like Vercel where DATABASE_URL is not available during build
+export async function getPrisma() {
   if (global.prisma) {
     return global.prisma;
   }
   
-  // Check if DATABASE_URL is defined before creating PrismaClient
-  // This prevents build-time errors on platforms like Vercel
+  // Check if DATABASE_URL is defined
   if (!process.env.DATABASE_URL) {
-    // In production build without DATABASE_URL, create a stub client
-    // that will fail gracefully at runtime
-    console.warn("DATABASE_URL not found, creating fallback PrismaClient");
+    throw new Error("DATABASE_URL environment variable is not defined");
   }
   
   const prisma = new PrismaClient();
@@ -26,5 +25,3 @@ function getPrisma() {
   
   return prisma;
 }
-
-export const prisma = getPrisma();
