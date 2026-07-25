@@ -110,7 +110,7 @@ export function GameHomepageScene() {
     clearError();
     try {
       if (isLoginMode) {
-        await login(formData.username, formData.password);
+        await login(formData.email, formData.password);
       } else {
         await register(formData.username, formData.password, formData.email);
       }
@@ -493,19 +493,17 @@ export function GameHomepageScene() {
                 />
               </div>
 
-              {!isLoginMode && (
-                <div>
-                  <label className="block text-[#5d4a37] font-medium mb-2">Email</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
-                    placeholder="输入邮箱"
-                    required
-                  />
-                </div>
-              )}
+              <div>
+                <label className="block text-[#5d4a37] font-medium mb-2">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
+                  placeholder="输入邮箱"
+                  required
+                />
+              </div>
 
               <div>
                 <label className="block text-[#5d4a37] font-medium mb-2">Password</label>

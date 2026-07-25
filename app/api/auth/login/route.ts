@@ -8,18 +8,18 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json();
+    const { email, password } = await request.json();
 
-    if (!username || !password) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: "Username and password are required" },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
 
     const prisma = await getPrisma();
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { email },
       include: { gameProgress: true },
     });
 
