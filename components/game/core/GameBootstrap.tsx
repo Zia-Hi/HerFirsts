@@ -23,6 +23,7 @@ import { HotelRoomScene } from "@/components/game/scenes/HotelRoomScene";
 import { HotelMissionScene } from "@/components/game/scenes/HotelMissionScene";
 import { HotelMissionCompletedScene } from "@/components/game/scenes/HotelMissionCompletedScene";
 import { ForumScene } from "@/components/game/scenes/ForumScene";
+import { GameEndingScene } from "@/components/game/scenes/GameEndingScene";
 import { registerScene, SCENE_IDS, GAME_STORAGE_KEY } from "@/lib/game";
 import { audioManager } from "@/lib/game/audio-manager";
 import { saveManager, useGameStore } from "@/store";
@@ -52,6 +53,7 @@ function registerAllScenes() {
   registerScene({ id: SCENE_IDS.HOTEL_MISSION, component: HotelMissionScene });
   registerScene({ id: SCENE_IDS.HOTEL_MISSION_COMPLETED, component: HotelMissionCompletedScene });
   registerScene({ id: SCENE_IDS.FORUM, component: ForumScene });
+  registerScene({ id: SCENE_IDS.GAME_ENDING, component: GameEndingScene });
 }
 
 let scenesRegistered = false;

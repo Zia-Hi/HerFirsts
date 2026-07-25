@@ -25,6 +25,7 @@ interface GameStoreState {
   chapter3LetterPending: boolean;
   chapter3LetterShown: boolean;
   devMode: boolean;
+  endingShown: boolean;
 }
 
 interface GameStoreActions {
@@ -49,6 +50,7 @@ interface GameStoreActions {
   setChapter2LetterShown: (shown: boolean) => void;
   setChapter3LetterPending: (pending: boolean) => void;
   setChapter3LetterShown: (shown: boolean) => void;
+  setEndingShown: (shown: boolean) => void;
   getSnapshot: () => GameStateSnapshot;
   hydrate: (state: Partial<GameStoreState>) => void;
   reset: () => void;
@@ -79,6 +81,7 @@ const initialState: GameStoreState = {
   chapter3LetterPending: false,
   chapter3LetterShown: false,
   devMode: false,
+  endingShown: false,
 };
 
 export const useGameStore = create<GameStoreState & GameStoreActions>((set, get) => ({
@@ -132,6 +135,8 @@ export const useGameStore = create<GameStoreState & GameStoreActions>((set, get)
 
   setChapter3LetterShown: (chapter3LetterShown) => set({ chapter3LetterShown }),
 
+  setEndingShown: (endingShown) => set({ endingShown }),
+
   getSnapshot: () => {
     const { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected, lightingPrecautionShown, mission4Started } = get();
     return { currentScene, gamePhase, settings, completedMissions, isFirstMenu, inventoryHintShown, lightingEventShown, lightingToolsCollected, lightingPrecautionShown, mission4Started };
@@ -159,6 +164,17 @@ export const useGameStore = create<GameStoreState & GameStoreActions>((set, get)
 
   completeAllMissions: () =>
     set({
-      completedMissions: ["mission-1", "mission-2", "mission-3"],
+      completedMissions: ["mission-1", "mission-2", "mission-3", "mission-4", "mission-5"],
+      mission2Started: true,
+      mission4Started: true,
+      lightingEventShown: true,
+      lightingToolsCollected: true,
+      lightingPrecautionShown: true,
+      chapter1LetterPending: false,
+      chapter1LetterShown: true,
+      chapter2LetterPending: false,
+      chapter2LetterShown: true,
+      chapter3LetterPending: false,
+      chapter3LetterShown: true,
     }),
 }));

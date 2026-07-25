@@ -15,10 +15,25 @@ export function GameHomepageScene() {
   const [showAbout, setShowAbout] = useState(false);
 
   const { transitionToScene } = useSceneTransition();
-  const { completedMissions, devMode } = useGameStore();
+  const { completedMissions, devMode, endingShown } = useGameStore();
   const { openNotebook, closeNotebook, notebookOpen, cards } = useKnowledgeStore();
 
   useEffect(() => {
+    // Check if all missions are completed, redirect to ending (only once)
+    const allMissionsCompleted = 
+      completedMissions.includes("mission-1") &&
+      completedMissions.includes("mission-2") &&
+      completedMissions.includes("mission-3") &&
+      completedMissions.includes("mission-4") &&
+      completedMissions.includes("mission-5");
+    
+    if (allMissionsCompleted && !endingShown) {
+      setTimeout(() => {
+        void transitionToScene(SCENE_IDS.GAME_ENDING);
+      }, 500);
+      return;
+    }
+
     setTimeout(() => {
       setShowContent(true);
     }, 300);
@@ -42,7 +57,7 @@ export function GameHomepageScene() {
       document.removeEventListener("touchstart", handleInteraction);
       document.removeEventListener("keydown", handleInteraction);
     };
-  }, []);
+  }, [completedMissions, transitionToScene, endingShown]);
 
   const chapter1Completed = completedMissions.includes("mission-1") && 
                             completedMissions.includes("mission-2") && 
@@ -240,6 +255,32 @@ export function GameHomepageScene() {
         onClose={closeNotebook}
       />
       <SettingsPanel open={showSettings} onClose={() => setShowSettings(false)} />
+
+      {/* Developer Mode Button */}
+      <motion.div
+        className="fixed bottom-4 right-4 z-40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+      >
+        <motion.button
+          type="button"
+          onClick={() => {
+            const completeAllMissions = useGameStore.getState().completeAllMissions;
+            const unlockAllCards = useKnowledgeStore.getState().unlockAllCards;
+            completeAllMissions();
+            unlockAllCards();
+            audioManager.play("ui-confirm", { channel: "sfx" });
+            alert("✅ 开发者模式已激活！\n所有关卡和章节已完成！\n所有技能卡片已解锁！");
+          }}
+          className="px-4 py-2 bg-[#5d4a37]/80 text-white text-xs font-bold tracking-wider rounded-full hover:bg-[#5d4a37] transition-all shadow-lg"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          title="开发者：一键完成所有关卡"
+        >
+          🔧 DEV MODE
+        </motion.button>
+      </motion.div>
 
       {showAbout && (
         <motion.div

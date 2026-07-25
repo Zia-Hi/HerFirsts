@@ -134,6 +134,7 @@ interface KnowledgeStoreActions {
   unlockLightingCard: () => KnowledgeCard;
   unlockHotelCard: () => KnowledgeCard;
   unlockOfficeCard: () => KnowledgeCard;
+  unlockAllCards: () => void;
   openNotebook: (cardId?: string) => void;
   closeNotebook: () => void;
   hasCard: (missionId: string) => boolean;
@@ -213,6 +214,18 @@ export const useKnowledgeStore = create<KnowledgeState & KnowledgeStoreActions>(
 
     set((state) => ({ cards: [...state.cards, card] }));
     return card;
+  },
+
+  unlockAllCards: () => {
+    const now = Date.now();
+    const newCards: KnowledgeCard[] = [
+      { ...SHOWER_KNOWLEDGE_CARD, id: `knowledge-shower-${now}`, unlockedAt: now },
+      { ...WIFI_KNOWLEDGE_CARD, id: `knowledge-wifi-${now}`, unlockedAt: now },
+      { ...LIGHTING_KNOWLEDGE_CARD, id: `knowledge-lighting-${now}`, unlockedAt: now },
+      { ...OFFICE_KNOWLEDGE_CARD, id: `knowledge-office-${now}`, unlockedAt: now },
+      { ...HOTEL_KNOWLEDGE_CARD, id: `knowledge-hotel-${now}`, unlockedAt: now },
+    ];
+    set({ cards: newCards });
   },
 
   openNotebook: (cardId) =>

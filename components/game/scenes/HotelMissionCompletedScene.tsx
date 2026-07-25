@@ -17,6 +17,7 @@ export function HotelMissionCompletedScene() {
   const { unlockHotelCard, openNotebook, closeNotebook } = useKnowledgeStore();
   const addCompletedMission = useGameStore((s) => s.addCompletedMission);
   const setChapter3LetterPending = useGameStore((s) => s.setChapter3LetterPending);
+  const completedMissions = useGameStore((s) => s.completedMissions);
   const { transitionToScene } = useSceneTransition();
   const { play } = useGameAudio();
 
@@ -56,8 +57,36 @@ export function HotelMissionCompletedScene() {
   const handleBackToMenu = useCallback(() => {
     play("ui-confirm");
     closeNotebook();
-    void transitionToScene(SCENE_IDS.GAME_HOMEPAGE);
-  }, [play, closeNotebook, transitionToScene]);
+    const allMissionsCompleted = 
+      completedMissions.includes("mission-1") &&
+      completedMissions.includes("mission-2") &&
+      completedMissions.includes("mission-3") &&
+      completedMissions.includes("mission-4") &&
+      completedMissions.includes("mission-5");
+    
+    if (allMissionsCompleted) {
+      void transitionToScene(SCENE_IDS.GAME_ENDING);
+    } else {
+      void transitionToScene(SCENE_IDS.GAME_HOMEPAGE);
+    }
+  }, [play, closeNotebook, transitionToScene, completedMissions]);
+
+  const handleBackToHome = useCallback(() => {
+    play("ui-confirm");
+    closeNotebook();
+    const allMissionsCompleted = 
+      completedMissions.includes("mission-1") &&
+      completedMissions.includes("mission-2") &&
+      completedMissions.includes("mission-3") &&
+      completedMissions.includes("mission-4") &&
+      completedMissions.includes("mission-5");
+    
+    if (allMissionsCompleted) {
+      void transitionToScene(SCENE_IDS.GAME_ENDING);
+    } else {
+      void transitionToScene(SCENE_IDS.GAME_HOMEPAGE);
+    }
+  }, [play, closeNotebook, transitionToScene, completedMissions]);
 
   const handleBackToHotel = useCallback(() => {
     play("ui-confirm");
