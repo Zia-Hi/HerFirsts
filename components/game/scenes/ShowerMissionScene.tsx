@@ -108,6 +108,12 @@ export function ShowerMissionScene() {
   }, [repairPhase]);
 
   useEffect(() => {
+    if (showStartPrompt) {
+      showDialog("点击花洒试试吧");
+    }
+  }, []);
+
+  useEffect(() => {
     if (repairPhase === "prepare" && usedVinegar && usedPlasticBag) {
       setTimeout(() => {
         setCurrentShowerImage(6);
@@ -124,6 +130,7 @@ export function ShowerMissionScene() {
 
   const handleStartShower = useCallback(() => {
     setShowStartPrompt(false);
+    hideDialog();
     play("ui-confirm");
     setTimeout(() => {
       setWaterSpraying(true);
@@ -134,7 +141,7 @@ export function ShowerMissionScene() {
         setRepairPhase("rub");
       }, 2000);
     }, 500);
-  }, [play, setWaterSpraying, showDialog, setRepairPhase]);
+  }, [play, setWaterSpraying, showDialog, setRepairPhase, hideDialog]);
 
   const handleInspectPart = useCallback((partId: ShowerPartId) => {
     if (!partId) return;
