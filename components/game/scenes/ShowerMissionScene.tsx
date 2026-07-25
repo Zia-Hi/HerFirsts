@@ -30,7 +30,7 @@ export function ShowerMissionScene() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [showCompleteButton, setShowCompleteButton] = useState(false);
   const [fadeToBlack, setFadeToBlack] = useState(false);
-  const [showStartPrompt, setShowStartPrompt] = useState(true);
+  const startPromptShown = useMissionStore((s) => s.startPromptShown);
   const [cameraZoom, setCameraZoom] = useState(1);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
@@ -58,6 +58,7 @@ export function ShowerMissionScene() {
   const setUsedPlasticBag = useMissionStore((s) => s.setUsedPlasticBag);
   const setWaterSpraying = useMissionStore((s) => s.setWaterSpraying);
   const setWaterFixed = useMissionStore((s) => s.setWaterFixed);
+  const setStartPromptShown = useMissionStore((s) => s.setStartPromptShown);
 
   const items = useInventoryStore((s) => s.items);
   const removeItem = useInventoryStore((s) => s.removeItem);
@@ -102,16 +103,12 @@ export function ShowerMissionScene() {
   }, [hasVinegar, hasPlasticBag, repairPhase, showDialog]);
 
   useEffect(() => {
-    if (repairPhase !== "idle" && repairPhase !== "rub" && repairPhase !== "collect") {
-      setShowStartPrompt(false);
-    }
-  }, [repairPhase]);
-
-  useEffect(() => {
-    if (showStartPrompt) {
+    // 只有第一次进入浴室且提示还没显示过时，才显示提示
+    if (!startPromptShown && repairPhase === "idle") {
       showDialog("点击花洒试试吧");
+      setStartPromptShown(true);
     }
-  }, []);
+  }, [startPromptShown, repairPhase, showDialog, setStartPromptShown]);
 
   useEffect(() => {
     if (repairPhase === "prepare" && usedVinegar && usedPlasticBag) {
@@ -129,7 +126,6 @@ export function ShowerMissionScene() {
   }, []);
 
   const handleStartShower = useCallback(() => {
-    setShowStartPrompt(false);
     hideDialog();
     play("ui-confirm");
     setTimeout(() => {
@@ -357,7 +353,7 @@ export function ShowerMissionScene() {
     return "locked";
   };
 
-  const isShowerClickable = showStartPrompt || (waterSpraying && !waterFixed && repairPhase === "idle");
+  const isShowerClickable = repairPhase === "idle";
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-[#2d3436]">
@@ -751,10 +747,8 @@ export function ShowerMissionScene() {
       <button
         type="button"
         onClick={() => {
-          if (showStartPrompt) {
+          if (repairPhase === "idle") {
             handleStartShower();
-          } else if (waterSpraying && repairPhase === "idle") {
-            setRepairPhase("rub");
           } else if (repairPhase === "rub") {
             handleRubNozzle();
           } else if (repairPhase === "pour-vinegar") {
@@ -769,8 +763,7 @@ export function ShowerMissionScene() {
         }}
         disabled={isRubbing}
         className={`absolute -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full z-20 transition-all duration-200 ${
-          showStartPrompt || 
-          (waterSpraying && repairPhase === "idle") || 
+          repairPhase === "idle" || 
           repairPhase === "pour-vinegar" ||
           repairPhase === "remove-head" ||
           repairPhase === "reinstall" ||
@@ -781,13 +774,13 @@ export function ShowerMissionScene() {
         style={{
           left: currentShowerImage === 8 ? "55%" : "50%",
           top: currentShowerImage === 8 ? "45%" : "14%",
-          boxShadow: showStartPrompt || 
+          boxShadow: repairPhase === "idle" || 
             repairPhase === "pour-vinegar" || 
             repairPhase === "remove-head" ||
             repairPhase === "reinstall" ||
             repairPhase === "test"
             ? "0 0 20px rgba(255,255,255,0.3)" : "none",
-          animation: showStartPrompt ||
+          animation: repairPhase === "idle" ||
             repairPhase === "pour-vinegar" || 
             repairPhase === "remove-head" ||
             repairPhase === "reinstall" ||

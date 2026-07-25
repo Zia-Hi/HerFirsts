@@ -148,7 +148,7 @@ export function MissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回 HOME
+              Back to Home
             </motion.button>
           </motion.div>
         )}
@@ -188,7 +188,7 @@ export function MissionCompletedScene() {
               }}>
                 <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#8b7d6b]/30">
                   <h2 className="font-game-serif text-3xl font-bold text-[#4a3a2a]">
-                    花洒维修技能卡
+                    Shower Repair Skill Card
                   </h2>
                   <span className="text-sm text-[#8b7d6b] uppercase tracking-widest">
                     Mission 1
@@ -198,32 +198,32 @@ export function MissionCompletedScene() {
                 <div className="space-y-6">
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                      问题
+                      Problem
                     </h3>
                     <p className="text-[#4a3a2a] leading-relaxed text-lg">
-                      花洒出水孔堵、水流变小、分叉乱喷
+                      Shower head clogged, water flow reduced, spraying unevenly
                     </p>
                   </div>
 
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                      原因
+                      Cause
                     </h3>
                     <p className="text-[#4a3a2a] leading-relaxed text-lg">
-                      自来水水垢堵住出水硅胶孔
+                      Limescale buildup from tap water blocks the silicone nozzles
                     </p>
                   </div>
 
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-3">
-                      解决方法
+                      Solution
                     </h3>
                     <ol className="list-decimal list-inside space-y-3">
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        用手指搓洗每个硅胶出水嘴，软垢在搓洗后将脱落
+                        Rub each silicone nozzle with your fingers - soft deposits will come off
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        若发现堵塞严重：将白醋导入塑料袋，将花洒头拆下放进塑料袋浸泡，静置30分钟，拿水冲干净即可
+                        For severe clogs: Soak the shower head in a bag of white vinegar for 30 minutes, then rinse thoroughly with water
                       </li>
                     </ol>
                   </div>
@@ -237,7 +237,7 @@ export function MissionCompletedScene() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    保存至 Notebook
+                    Save to Notebook
                   </motion.button>
                 </div>
               </div>
@@ -258,7 +258,7 @@ export function MissionCompletedScene() {
             className="absolute inset-0 z-[60] flex items-center justify-center"
           >
             <div className="bg-white/70 text-black px-8 py-4 rounded-lg">
-              <p className="text-xl font-serif">已保存至 Notebook</p>
+              <p className="text-xl font-serif">Saved to Notebook</p>
             </div>
           </motion.div>
         )}

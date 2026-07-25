@@ -164,7 +164,7 @@ export function HotelMissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回酒店
+              Back to Hotel
             </motion.button>
 
             <motion.button
@@ -174,7 +174,7 @@ export function HotelMissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回 HOME
+              Back to Home
             </motion.button>
           </motion.div>
         )}
@@ -215,7 +215,7 @@ export function HotelMissionCompletedScene() {
                   }}>
                     <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#8b7d6b]/30">
                       <h2 className="font-game-serif text-3xl font-bold text-[#4a3a2a]">
-                        防偷拍检查技能卡
+                        Hidden Camera Detection Skill Card
                       </h2>
                       <span className="text-sm text-[#8b7d6b] uppercase tracking-widest">
                         Hotel Mission
@@ -225,41 +225,41 @@ export function HotelMissionCompletedScene() {
                     <div className="space-y-6 pb-4">
                       <div>
                         <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                          问题
+                          Problem
                         </h3>
                         <p className="text-[#4a3a2a] leading-relaxed text-lg">
-                          入住酒店时担心房间存在偷拍设备
+                          Concerned about hidden cameras in hotel rooms
                         </p>
                       </div>
 
                       <div>
                         <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                          原因
+                          Cause
                         </h3>
                         <p className="text-[#4a3a2a] leading-relaxed text-lg">
-                          不法分子可能在酒店房间安装隐蔽摄像头
+                          Criminals may install hidden cameras in hotel rooms
                         </p>
                       </div>
 
                       <div>
                         <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-3">
-                          检查方法
+                          Detection Methods
                         </h3>
                         <ol className="list-decimal list-inside space-y-3">
                           <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                            关闭房间主灯，拉上窗帘，保持房间较暗
+                            Turn off main lights, close curtains, keep room dark
                           </li>
                           <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                            打开手机相机，缓慢移动镜头检查各个角落
+                            Open phone camera, slowly scan all corners
                           </li>
                           <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                            重点检查：插座面板、电视、空调、烟雾报警器、浴室等
+                            Focus on: power outlets, TV, air conditioner, smoke detector, bathroom, etc.
                           </li>
                           <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                            如发现红色发光点、异常小孔等可疑设备，保留现场
+                            If red lights or suspicious holes found, preserve the scene
                           </li>
                           <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                            联系酒店前台，如怀疑涉及偷拍可报警处理
+                            Contact hotel front desk, report to police if filming is suspected
                           </li>
                         </ol>
                       </div>
@@ -274,7 +274,7 @@ export function HotelMissionCompletedScene() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      保存至 Notebook
+                      Save to Notebook
                     </motion.button>
                   </div>
                 </div>
@@ -296,7 +296,7 @@ export function HotelMissionCompletedScene() {
             className="absolute inset-0 z-[60] flex items-center justify-center"
           >
             <div className="bg-white/70 text-black px-8 py-4 rounded-lg">
-              <p className="text-xl font-serif">已保存至 Notebook</p>
+              <p className="text-xl font-serif">Saved to Notebook</p>
             </div>
           </motion.div>
         )}

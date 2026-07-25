@@ -85,6 +85,16 @@ export function OfficeOpeningScene() {
     setTransitionState("idle");
   }, [setGamePhase, setPlayerHasControl, setCurrentScene, setTransitionState]);
 
+  const handleSkip = useCallback(() => {
+    stop("ambient-city");
+    audioManager.setChannelVolume("music", 0.6);
+    setPhase("office-reveal");
+    play("ambient-apartment");
+    setTimeout(() => {
+      setShowMenu(true);
+    }, 500);
+  }, [stop, play]);
+
   return (
     <>
       <div className="relative h-full w-full overflow-hidden">
@@ -124,6 +134,18 @@ export function OfficeOpeningScene() {
       </AnimatePresence>
 
       <SubtitleOverlay text={subtitle} />
+
+      {/* Skip Button */}
+      <motion.button
+        type="button"
+        onClick={handleSkip}
+        className="absolute top-6 right-6 z-50 px-4 py-2 bg-black/30 text-white/70 hover:text-white hover:bg-black/50 rounded-full text-sm font-medium transition-all"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        跳过动画
+      </motion.button>
 
       <AnimatePresence mode="wait">
         {phase === "city-view" && (

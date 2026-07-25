@@ -148,7 +148,7 @@ export function OfficeMissionCompletedScene() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              返回 HOME
+              Back to Home
             </motion.button>
           </motion.div>
         )}
@@ -188,7 +188,7 @@ export function OfficeMissionCompletedScene() {
               }}>
                 <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-[#8b7d6b]/30">
                   <h2 className="font-game-serif text-3xl font-bold text-[#4a3a2a]">
-                    磁盘清理技能卡
+                    Disk Cleanup Skill Card
                   </h2>
                   <span className="text-sm text-[#8b7d6b] uppercase tracking-widest">
                     Mission 4
@@ -198,58 +198,58 @@ export function OfficeMissionCompletedScene() {
                 <div className="space-y-6">
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                      问题
+                      Problem
                     </h3>
                     <p className="text-[#4a3a2a] leading-relaxed text-lg">
-                      C盘空间不足，Office自动保存失败、文件传输异常、系统卡顿
+                      C drive running out of space, Office auto-save failures, file transfer issues, system lag
                     </p>
                   </div>
 
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                      原因
+                      Cause
                     </h3>
                     <p className="text-[#4a3a2a] leading-relaxed text-lg">
-                      临时文件堆积、下载文件占用、回收站未清空、微信缓存等占用大量空间
+                      Accumulated temporary files, downloaded files, unemptied recycle bin, WeChat cache, etc.
                     </p>
                   </div>
 
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-3">
-                      解决方法
+                      Solution
                     </h3>
                     <ol className="list-decimal list-inside space-y-3">
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        清空回收站：删除文件后需手动清空回收站才能真正释放空间
+                        Empty Recycle Bin: Files aren't truly deleted until you empty the Recycle Bin
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        使用Windows磁盘清理工具：设置 &gt; 系统 &gt; 存储 &gt; 临时文件，清理可释放大量空间
+                        Use Windows Disk Cleanup: Settings &gt; System &gt; Storage &gt; Temporary Files
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        清理临时文件夹：运行Win+R输入%temp%，删除所有临时文件
+                        Clear temp folder: Press Win+R, type %temp%, delete all temporary files
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        清理Windows更新缓存：删除C:\Windows\SoftwareDistribution\Download目录下的文件
+                        Clear Windows Update cache: Delete files in C:\Windows\SoftwareDistribution\Download
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed text-lg">
-                        修改微信存储位置：将微信文件默认保存路径从C盘改到其他盘符
+                        Change WeChat storage location: Move default save path from C drive to another drive
                       </li>
                     </ol>
                   </div>
 
                   <div>
                     <h3 className="font-game-serif text-xl font-semibold text-[#5d4a37] mb-2">
-                      安全提示
+                      Safety Tips
                     </h3>
                     <ul className="list-disc list-inside space-y-1">
                       <li className="text-[#4a3a2a] leading-relaxed">
-                        删除文件前确认不再需要，清空回收站后无法恢复
+                        Confirm files are no longer needed before deleting - emptied Recycle Bin files cannot be recovered
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed">
-                        定期清理习惯比临时清理更重要，建议每周检查一次
+                        Regular cleaning is better than occasional cleaning - check weekly
                       </li>
                       <li className="text-[#4a3a2a] leading-relaxed">
-                        大型文件（视频、安装包）不要放在桌面或C盘
+                        Don't store large files (videos, installers) on desktop or C drive
                       </li>
                     </ul>
                   </div>
@@ -263,7 +263,7 @@ export function OfficeMissionCompletedScene() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    保存至 Notebook
+                    Save to Notebook
                   </motion.button>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export function OfficeMissionCompletedScene() {
             className="absolute inset-0 z-[60] flex items-center justify-center"
           >
             <div className="bg-white/70 text-black px-8 py-4 rounded-lg">
-              <p className="text-xl font-serif">已保存至 Notebook</p>
+              <p className="text-xl font-serif">Saved to Notebook</p>
             </div>
           </motion.div>
         )}

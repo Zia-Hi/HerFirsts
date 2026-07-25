@@ -124,9 +124,9 @@ export function GameHomepageScene() {
   const chapters = [
     {
       id: "chapter-1",
-      title: "Her First Home",
-      subtitle: "CHAPTER 1",
-      description: "Learn essential life skills and fix things on your own.",
+      title: "她的第一个家",
+      subtitle: "第一章",
+      description: "学习生活必备技能，自己动手解决问题。",
       color: "#8B9A7D",
       accentColor: "#6B7A5D",
       imageUrl: "/images/zhuye1.png",
@@ -135,9 +135,9 @@ export function GameHomepageScene() {
     },
     {
       id: "chapter-2",
-      title: "Her First Office",
-      subtitle: "CHAPTER 2",
-      description: "Navigate work challenges and grow with confidence.",
+      title: "她的第一份工作",
+      subtitle: "第二章",
+      description: "应对职场挑战，自信成长。",
       color: "#7B9AB5",
       accentColor: "#5B7A95",
       imageUrl: "/images/zhuye2.png",
@@ -146,9 +146,9 @@ export function GameHomepageScene() {
     },
     {
       id: "chapter-3",
-      title: "Her First Journey",
-      subtitle: "CHAPTER 3",
-      description: "Stay safe, explore more, and handle the unexpected.",
+      title: "她的第一次旅行",
+      subtitle: "第三章",
+      description: "安全出行，探索更多，应对突发状况。",
       color: "#C4957A",
       accentColor: "#A4755A",
       imageUrl: "/images/zhuye3.png",
@@ -463,10 +463,10 @@ export function GameHomepageScene() {
           >
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-[#5d4a37] font-game-serif mb-2">
-                {isLoginMode ? "Welcome Back" : "Create Account"}
+                {isLoginMode ? "欢迎回来" : "创建账号"}
               </h2>
               <p className="text-[#8b7d6b]">
-                {isLoginMode ? "Sign in to continue your journey" : "Join us and start your adventure"}
+                {isLoginMode ? "登录继续你的旅程" : "加入我们，开始你的冒险"}
               </p>
             </div>
 
@@ -488,7 +488,7 @@ export function GameHomepageScene() {
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
-                  placeholder="Enter your username"
+                  placeholder="输入用户名"
                   required
                 />
               </div>
@@ -501,7 +501,7 @@ export function GameHomepageScene() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
-                    placeholder="Enter your email"
+                    placeholder="输入邮箱"
                   />
                 </div>
               )}
@@ -513,7 +513,7 @@ export function GameHomepageScene() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
-                  placeholder="Enter your password"
+                  placeholder="输入密码"
                   required
                 />
               </div>
@@ -525,7 +525,7 @@ export function GameHomepageScene() {
                 whileHover={!isLoading ? { scale: 1.02 } : {}}
                 whileTap={!isLoading ? { scale: 0.98 } : {}}
               >
-                {isLoading ? "Loading..." : (isLoginMode ? "Login" : "Register")}
+                {isLoading ? "加载中..." : (isLoginMode ? "登录" : "注册")}
               </motion.button>
             </form>
 

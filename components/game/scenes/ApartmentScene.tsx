@@ -222,7 +222,7 @@ export function ApartmentScene() {
 
     if (!welcomeShown) {
       setTimeout(() => {
-        setSubtitle("Welcome to your new apartment.");
+        setSubtitle("欢迎来到你的新家。");
       }, 2000);
 
       setTimeout(() => {
@@ -586,7 +586,7 @@ export function ApartmentScene() {
                   {
                     id: "mission-1",
                     name: "疏通堵塞的花洒",
-                    subtitle: "Unclogging the Shower",
+                    subtitle: "疏通花洒",
                     completed: completedMissions.includes("mission-1"),
                     status: completedMissions.includes("mission-1") ? "已完成" : "可开始",
                     statusColor: completedMissions.includes("mission-1") ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700",
@@ -594,7 +594,7 @@ export function ApartmentScene() {
                   {
                     id: "mission-2",
                     name: "Wi-Fi信号优化",
-                    subtitle: "Wi-Fi Optimization",
+                    subtitle: "Wi-Fi优化",
                     completed: completedMissions.includes("mission-2"),
                     status: completedMissions.includes("mission-2") ? "已完成" : (completedMissions.includes("mission-1") ? "可开始" : "暂未开放"),
                     statusColor: completedMissions.includes("mission-2") ? "bg-green-100 text-green-700" : (completedMissions.includes("mission-1") ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"),
@@ -602,7 +602,7 @@ export function ApartmentScene() {
                   {
                     id: "mission-3",
                     name: "客厅灯具维修",
-                    subtitle: "Lighting Repair",
+                    subtitle: "灯具维修",
                     completed: completedMissions.includes("mission-3"),
                     status: completedMissions.includes("mission-3") ? "已完成" : (completedMissions.includes("mission-2") ? "可开始" : "暂未开放"),
                     statusColor: completedMissions.includes("mission-3") ? "bg-green-100 text-green-700" : (completedMissions.includes("mission-2") ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"),

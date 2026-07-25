@@ -31,6 +31,7 @@ const initialState: MissionState = {
   currentShowerImage: 1,
   usedVinegar: false,
   usedPlasticBag: false,
+  startPromptShown: false,
 };
 
 interface MissionStoreActions {
@@ -53,6 +54,7 @@ interface MissionStoreActions {
   setCurrentShowerImage: (image: number) => void;
   setUsedVinegar: (used: boolean) => void;
   setUsedPlasticBag: (used: boolean) => void;
+  setStartPromptShown: (shown: boolean) => void;
 }
 
 export const useMissionStore = create<MissionState & MissionStoreActions>((set, get) => ({
@@ -159,6 +161,8 @@ export const useMissionStore = create<MissionState & MissionStoreActions>((set, 
   setUsedVinegar: (usedVinegar) => set({ usedVinegar }),
 
   setUsedPlasticBag: (usedPlasticBag) => set({ usedPlasticBag }),
+
+  setStartPromptShown: (startPromptShown) => set({ startPromptShown }),
 
   getSnapshot: () => {
     const {

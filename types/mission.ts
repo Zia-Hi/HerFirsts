@@ -82,6 +82,7 @@ export interface MissionState {
   currentShowerImage: number;
   usedVinegar: boolean;
   usedPlasticBag: boolean;
+  startPromptShown: boolean;
 }
 
 export interface MissionStateSnapshot {
