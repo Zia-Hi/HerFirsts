@@ -21,11 +21,12 @@ export function GameHomepageScene() {
   const { transitionToScene } = useSceneTransition();
   const { completedMissions, devMode, hydrate } = useGameStore();
   const { openNotebook, closeNotebook, notebookOpen, cards } = useKnowledgeStore();
-  const { isAuthenticated, isLoading, error, user, gameProgress, login, register, logout, checkAuth, clearError } = useAuthStore();
+  const { isAuthenticated, isLoading, error, user, gameProgress, login, register, logout, checkAuth, clearError, restoreSession } = useAuthStore();
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    restoreSession();
+    void checkAuth();
+  }, [checkAuth, restoreSession]);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated && gameProgress) {

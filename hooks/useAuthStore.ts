@@ -36,6 +36,7 @@ interface AuthStoreActions {
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearError: () => void;
+  restoreSession: () => void;
 }
 
 const initialGameProgress: GameProgress = {
@@ -52,6 +53,33 @@ const initialGameProgress: GameProgress = {
   chapter3LetterPending: false,
   chapter3LetterShown: false,
   endingShown: false,
+};
+
+const SESSION_KEY = "herfirsts-auth-session";
+
+const saveSession = (user: User, gameProgress: GameProgress) => {
+  if (typeof window !== "undefined") {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ user, gameProgress }));
+  }
+};
+
+const loadSession = (): { user: User; gameProgress: GameProgress } | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const data = sessionStorage.getItem(SESSION_KEY);
+    if (data) {
+      return JSON.parse(data);
+    }
+  } catch {
+    /* ignore parse errors */
+  }
+  return null;
+};
+
+const clearSession = () => {
+  if (typeof window !== "undefined") {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
 };
 
 export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get) => ({
@@ -76,9 +104,14 @@ export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get)
       }
 
       const data = await response.json();
+      const user = { id: data.id, username: data.username, email: data.email };
+      const gameProgress = data.gameProgress || initialGameProgress;
+      
+      saveSession(user, gameProgress);
+      
       set({
-        user: { id: data.id, username: data.username, email: data.email },
-        gameProgress: data.gameProgress || initialGameProgress,
+        user,
+        gameProgress,
         isAuthenticated: true,
         isLoading: false,
       });
@@ -106,9 +139,14 @@ export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get)
       }
 
       const data = await response.json();
+      const user = { id: data.id, username: data.username, email: data.email };
+      const gameProgress = initialGameProgress;
+      
+      saveSession(user, gameProgress);
+      
       set({
-        user: { id: data.id, username: data.username, email: data.email },
-        gameProgress: initialGameProgress,
+        user,
+        gameProgress,
         isAuthenticated: true,
         isLoading: false,
       });
@@ -127,6 +165,7 @@ export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get)
     } catch (error) {
       console.error("Logout error:", error);
     }
+    clearSession();
     set({
       user: null,
       gameProgress: null,
@@ -137,6 +176,17 @@ export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get)
   },
 
   checkAuth: async () => {
+    const session = loadSession();
+    if (session) {
+      set({
+        user: session.user,
+        gameProgress: session.gameProgress,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+      return;
+    }
+
     set({ isLoading: true, error: null });
     try {
       const response = await fetch("/api/auth/me", {
@@ -146,9 +196,14 @@ export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get)
       const data = await response.json();
 
       if (data.authenticated && data.user) {
+        const user = { id: data.id, username: data.username, email: data.email };
+        const gameProgress = data.gameProgress || initialGameProgress;
+        
+        saveSession(user, gameProgress);
+        
         set({
-          user: { id: data.id, username: data.username, email: data.email },
-          gameProgress: data.gameProgress || initialGameProgress,
+          user,
+          gameProgress,
           isAuthenticated: true,
           isLoading: false,
         });
@@ -166,6 +221,18 @@ export const useAuthStore = create<AuthStoreState & AuthStoreActions>((set, get)
         user: null,
         gameProgress: null,
         isAuthenticated: false,
+        isLoading: false,
+      });
+    }
+  },
+
+  restoreSession: () => {
+    const session = loadSession();
+    if (session) {
+      set({
+        user: session.user,
+        gameProgress: session.gameProgress,
+        isAuthenticated: true,
         isLoading: false,
       });
     }
