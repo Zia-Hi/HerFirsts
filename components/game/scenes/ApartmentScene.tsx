@@ -429,7 +429,7 @@ export function ApartmentScene() {
         onClick={() => openNotebook()}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: showLabels ? 1 : 0, x: showLabels ? 0 : 20 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={{ duration: 0.5 }}
         className="absolute right-4 top-4 z-30 flex flex-col items-center hover:scale-110 transition-transform"
       >
         <div className="w-12 h-12 bg-[#f5e6d3] border-2 border-[#dcc4a0] rounded-lg shadow-lg flex items-center justify-center">
@@ -440,7 +440,7 @@ export function ApartmentScene() {
         </span>
       </motion.button>
 
-      <SettingsButton onClick={() => setShowSettings(true)} />
+      <SettingsButton onClick={() => setShowSettings(true)} visible={showLabels} />
 
       <motion.button
         type="button"
@@ -450,8 +450,8 @@ export function ApartmentScene() {
           setChapter1LetterShown(true);
         }}
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.4 }}
+        animate={{ opacity: showLabels ? 1 : 0, scale: showLabels ? 1 : 0.8 }}
+        transition={{ duration: 0.5 }}
         className="absolute right-4 top-36 z-30 flex flex-col items-center hover:scale-110 transition-transform"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -487,8 +487,8 @@ export function ApartmentScene() {
           void transitionToScene(SCENE_IDS.GAME_HOMEPAGE);
         }}
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.6 }}
+        animate={{ opacity: showLabels ? 1 : 0, scale: showLabels ? 1 : 0.8 }}
+        transition={{ duration: 0.5 }}
         className="absolute right-4 top-52 z-30 flex flex-col items-center hover:scale-110 transition-transform"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -522,8 +522,8 @@ export function ApartmentScene() {
           setShowMissionList(!showMissionList);
         }}
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.8 }}
+        animate={{ opacity: showLabels ? 1 : 0, scale: showLabels ? 1 : 0.8 }}
+        transition={{ duration: 0.5 }}
         className="absolute right-4 top-[290px] z-30 flex flex-col items-center hover:scale-110 transition-transform"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}

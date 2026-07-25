@@ -146,7 +146,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   );
 }
 
-export function SettingsButton({ onClick, className = "absolute right-4 top-20 z-30 flex flex-col items-center hover:scale-110 transition-transform" }: { onClick: () => void; className?: string }) {
+export function SettingsButton({ onClick, className = "absolute right-4 top-20 z-30 flex flex-col items-center hover:scale-110 transition-transform", visible = true }: { onClick: () => void; className?: string; visible?: boolean }) {
   return (
     <motion.button
       type="button"
@@ -154,6 +154,9 @@ export function SettingsButton({ onClick, className = "absolute right-4 top-20 z
       className={className}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8 }}
+      transition={{ duration: 0.5 }}
     >
       <div className="w-12 h-12 bg-[#f5e6d3] border-2 border-[#dcc4a0] rounded-lg shadow-lg flex items-center justify-center">
         <Settings className="text-[#5d4a37]" size={20} />
