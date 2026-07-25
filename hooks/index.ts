@@ -5,4 +5,3 @@ export { useSceneTransition } from "./useSceneTransition";
 export { useAutoSave, saveGameNow } from "./useAutoSave";
 export { useGameAudio } from "./useGameAudio";
 export { useIdleBreathing, useCameraSway, useDelayedAction } from "./useIdleAnimation";
-export { useChat } from "./useChat";
