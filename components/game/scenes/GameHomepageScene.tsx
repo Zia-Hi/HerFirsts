@@ -6,6 +6,7 @@ import { SCENE_IDS } from "@/lib/game";
 import { useSceneTransition } from "@/hooks/useSceneTransition";
 import { useGameStore } from "@/store/game-store";
 import { useKnowledgeStore } from "@/store/knowledge-store";
+import { useAuthStore } from "@/hooks/useAuthStore";
 import { KnowledgeNotebook, SettingsPanel } from "@/components/game/ui";
 import { audioManager } from "@/lib/game/audio-manager";
 
@@ -13,13 +14,38 @@ export function GameHomepageScene() {
   const [showContent, setShowContent] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [formData, setFormData] = useState({ username: "", password: "", email: "" });
 
   const { transitionToScene } = useSceneTransition();
-  const { completedMissions, devMode, endingShown } = useGameStore();
+  const { completedMissions, devMode, hydrate } = useGameStore();
   const { openNotebook, closeNotebook, notebookOpen, cards } = useKnowledgeStore();
+  const { isAuthenticated, isLoading, error, user, gameProgress, login, register, logout, checkAuth, clearError } = useAuthStore();
 
   useEffect(() => {
-    // Check if all missions are completed, redirect to ending (only once)
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && gameProgress) {
+      hydrate({
+        completedMissions: gameProgress.completedMissions,
+        mission2Started: gameProgress.mission2Started,
+        mission4Started: gameProgress.mission4Started,
+        lightingEventShown: gameProgress.lightingEventShown,
+        lightingToolsCollected: gameProgress.lightingToolsCollected,
+        lightingPrecautionShown: gameProgress.lightingPrecautionShown,
+        chapter1LetterPending: gameProgress.chapter1LetterPending,
+        chapter1LetterShown: gameProgress.chapter1LetterShown,
+        chapter2LetterPending: gameProgress.chapter2LetterPending,
+        chapter2LetterShown: gameProgress.chapter2LetterShown,
+        chapter3LetterPending: gameProgress.chapter3LetterPending,
+        chapter3LetterShown: gameProgress.chapter3LetterShown,
+        endingShown: gameProgress.endingShown,
+      });
+    }
+
     const allMissionsCompleted = 
       completedMissions.includes("mission-1") &&
       completedMissions.includes("mission-2") &&
@@ -27,7 +53,7 @@ export function GameHomepageScene() {
       completedMissions.includes("mission-4") &&
       completedMissions.includes("mission-5");
     
-    if (allMissionsCompleted && !endingShown) {
+    if (allMissionsCompleted && !gameProgress?.endingShown) {
       setTimeout(() => {
         void transitionToScene(SCENE_IDS.GAME_ENDING);
       }, 500);
@@ -57,7 +83,7 @@ export function GameHomepageScene() {
       document.removeEventListener("touchstart", handleInteraction);
       document.removeEventListener("keydown", handleInteraction);
     };
-  }, [completedMissions, transitionToScene, endingShown]);
+  }, [completedMissions, transitionToScene, isLoading, isAuthenticated, gameProgress, hydrate]);
 
   const chapter1Completed = completedMissions.includes("mission-1") && 
                             completedMissions.includes("mission-2") && 
@@ -66,12 +92,32 @@ export function GameHomepageScene() {
   const chapter3Completed = completedMissions.includes("mission-5");
 
   const handleChapterClick = (chapterId: string) => {
+    if (!isAuthenticated && !devMode) {
+      setShowAuthModal(true);
+      return;
+    }
     if (chapterId === "chapter-1") {
       void transitionToScene(SCENE_IDS.OPENING);
     } else if (chapterId === "chapter-2") {
       void transitionToScene(SCENE_IDS.OFFICE_OPENING);
     } else if (chapterId === "chapter-3") {
       void transitionToScene(SCENE_IDS.HOTEL_OPENING);
+    }
+  };
+
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    try {
+      if (isLoginMode) {
+        await login(formData.username, formData.password);
+      } else {
+        await register(formData.username, formData.password, formData.email);
+      }
+      setShowAuthModal(false);
+      setFormData({ username: "", password: "", email: "" });
+    } catch {
+      // Error is already handled by useAuthStore
     }
   };
 
@@ -120,134 +166,182 @@ export function GameHomepageScene() {
         style={{ filter: "blur(4px) brightness(0.95)" }}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : -20 }}
-        transition={{ duration: 0.8, delay: 0.7 }}
-        className="absolute top-[13%] left-0 right-0 z-30 text-center px-4"
-      >
-        <h1 
-          className="text-white font-game-serif tracking-[0.2em] uppercase"
-          style={{ 
-            fontSize: "clamp(1.3rem, 3vw, 2.8rem)",
-            textShadow: "0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2)"
-          }}
+      {!isAuthenticated && !isLoading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0 bg-black/40 flex items-center justify-center z-40"
         >
-          Every first time deserves confidence
-        </h1>
-      </motion.div>
-
-      <div className="absolute top-6 left-6 z-30">
-        <motion.button
-          type="button"
-          onClick={() => setShowSettings(true)}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : -20 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors cursor-pointer border border-white/50"
-        >
-          <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#5D4A37]" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
-        </motion.button>
-      </div>
-
-      <div className="absolute top-6 right-6 flex gap-3 z-30">
-        <motion.button
-          type="button"
-          onClick={() => openNotebook()}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
-        >
-          <span className="text-[#5d4a37] font-game-serif text-xl">📖</span>
-          <span className="text-sm text-[#5D4A37] font-medium">Notebook</span>
-          {cards.length > 0 && (
-            <span className="w-5 h-5 rounded-full bg-[#8B9A7D] text-white text-xs flex items-center justify-center">
-              {cards.length}
-            </span>
-          )}
-        </motion.button>
-
-        <motion.button
-          type="button"
-          onClick={() => setShowAbout(true)}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
-          transition={{ duration: 0.5, delay: 0.35 }}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
-        >
-          <span className="text-[#5d4a37] font-game-serif text-xl">ℹ️</span>
-          <span className="text-sm text-[#5D4A37] font-medium">About</span>
-        </motion.button>
-
-        <motion.button
-          type="button"
-          onClick={() => void transitionToScene(SCENE_IDS.FORUM)}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
-        >
-          <span className="text-[#5d4a37] font-game-serif text-xl">💬</span>
-          <span className="text-sm text-[#5D4A37] font-medium">Forum</span>
-        </motion.button>
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 30 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="absolute inset-0 flex items-center justify-center pointer-events-none pt-[10%]"
-      >
-        <div className="grid grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-5xl px-4">
-          {chapters.map((chapter, index) => (
-            <motion.div
-              key={chapter.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 50 }}
-              transition={{ duration: 0.6, delay: 0.6 + index * 0.15 }}
-              className="flex items-center justify-center pointer-events-auto aspect-square"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-center px-4"
+          >
+            <h2 className="text-white text-3xl md:text-5xl font-game-serif mb-4" style={{ textShadow: "0 0 20px rgba(255,255,255,0.8)" }}>
+              Welcome to Her Firsts
+            </h2>
+            <p className="text-white/80 text-lg md:text-xl mb-8">
+              Please log in to start your journey
+            </p>
+            <motion.button
+              type="button"
+              onClick={() => setShowAuthModal(true)}
+              className="px-10 py-4 bg-[#5d4a37] text-white text-xl font-serif tracking-wider rounded-full hover:bg-[#4a3a2a] transition-all shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <motion.button
-                type="button"
-                onClick={() => chapter.unlocked && handleChapterClick(chapter.id)}
-                className={`w-full h-full relative ${chapter.unlocked ? "cursor-pointer" : "cursor-not-allowed"}`}
-                whileHover={chapter.unlocked ? { scale: 1.08 } : {}}
-                whileTap={chapter.unlocked ? { scale: 0.97 } : {}}
-                transition={{ duration: 0.2 }}
-                disabled={!chapter.unlocked}
-              >
-                <img
-                  src={chapter.imageUrl + "?v=" + Math.random().toString(36).substr(2, 9)}
-                  alt={chapter.title}
-                  className={`w-full h-full object-contain ${!chapter.unlocked ? "grayscale opacity-50" : ""}`}
-                  style={{ transform: "scale(1.5)" }}
-                />
-                
-                {!chapter.unlocked && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                    <svg viewBox="0 0 24 24" className="w-12 h-12 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </div>
-                )}
+              Login / Register
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      )}
 
-                {chapter.completed && (
-                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </div>
-                )}
-              </motion.button>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+      {isAuthenticated && (
+        <>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : -20 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="absolute top-[13%] left-0 right-0 z-30 text-center px-4"
+          >
+            <h1 
+              className="text-white font-game-serif tracking-[0.2em] uppercase"
+              style={{ 
+                fontSize: "clamp(1.3rem, 3vw, 2.8rem)",
+                textShadow: "0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2)"
+              }}
+            >
+              Every first time deserves confidence
+            </h1>
+          </motion.div>
+
+          <div className="absolute top-6 left-6 z-30">
+            <motion.button
+              type="button"
+              onClick={() => setShowSettings(true)}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : -20 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md hover:bg-white transition-colors cursor-pointer border border-white/50"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#5D4A37]" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </motion.button>
+          </div>
+
+          <div className="absolute top-6 right-6 flex gap-3 z-30">
+            <motion.button
+              type="button"
+              onClick={() => openNotebook()}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
+            >
+              <span className="text-[#5d4a37] font-game-serif text-xl">📖</span>
+              <span className="text-sm text-[#5D4A37] font-medium">Notebook</span>
+              {cards.length > 0 && (
+                <span className="w-5 h-5 rounded-full bg-[#8B9A7D] text-white text-xs flex items-center justify-center">
+                  {cards.length}
+                </span>
+              )}
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={() => setShowAbout(true)}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
+            >
+              <span className="text-[#5d4a37] font-game-serif text-xl">ℹ️</span>
+              <span className="text-sm text-[#5D4A37] font-medium">About</span>
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={() => void transitionToScene(SCENE_IDS.FORUM)}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
+            >
+              <span className="text-[#5d4a37] font-game-serif text-xl">💬</span>
+              <span className="text-sm text-[#5D4A37] font-medium">Forum</span>
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={() => logout()}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+              transition={{ duration: 0.5, delay: 0.45 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md hover:bg-white transition-colors cursor-pointer"
+            >
+              <span className="text-[#5d4a37] font-game-serif text-xl">👤</span>
+              <span className="text-sm text-[#5D4A37] font-medium">{user?.username}</span>
+            </motion.button>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 30 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none pt-[10%]"
+          >
+            <div className="grid grid-cols-3 gap-6 md:gap-8 lg:gap-12 w-full max-w-5xl px-4">
+              {chapters.map((chapter, index) => (
+                <motion.div
+                  key={chapter.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 50 }}
+                  transition={{ duration: 0.6, delay: 0.6 + index * 0.15 }}
+                  className="flex items-center justify-center pointer-events-auto aspect-square"
+                >
+                  <motion.button
+                    type="button"
+                    onClick={() => chapter.unlocked && handleChapterClick(chapter.id)}
+                    className={`w-full h-full relative ${chapter.unlocked ? "cursor-pointer" : "cursor-not-allowed"}`}
+                    whileHover={chapter.unlocked ? { scale: 1.08 } : {}}
+                    whileTap={chapter.unlocked ? { scale: 0.97 } : {}}
+                    transition={{ duration: 0.2 }}
+                    disabled={!chapter.unlocked}
+                  >
+                    <img
+                      src={chapter.imageUrl + "?v=" + Math.random().toString(36).substr(2, 9)}
+                      alt={chapter.title}
+                      className={`w-full h-full object-contain ${!chapter.unlocked ? "grayscale opacity-50" : ""}`}
+                      style={{ transform: "scale(1.5)" }}
+                    />
+                    
+                    {!chapter.unlocked && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                        <svg viewBox="0 0 24 24" className="w-12 h-12 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
+                    )}
+
+                    {chapter.completed && (
+                      <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      </div>
+                    )}
+                  </motion.button>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </>
+      )}
 
       <KnowledgeNotebook
         open={notebookOpen}
@@ -345,6 +439,115 @@ export function GameHomepageScene() {
               >
                 关闭
               </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowAuthModal(false)}
+        >
+          <motion.div
+            className="relative w-[90%] max-w-md bg-[#f5e6d3] rounded-2xl shadow-2xl p-8"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-[#5d4a37] font-game-serif mb-2">
+                {isLoginMode ? "Welcome Back" : "Create Account"}
+              </h2>
+              <p className="text-[#8b7d6b]">
+                {isLoginMode ? "Sign in to continue your journey" : "Join us and start your adventure"}
+              </p>
+            </div>
+
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-red-100 border border-red-300 rounded-lg text-red-700 text-center"
+              >
+                {error}
+              </motion.div>
+            )}
+
+            <form onSubmit={handleAuthSubmit} className="space-y-4">
+              <div>
+                <label className="block text-[#5d4a37] font-medium mb-2">Username</label>
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
+                  placeholder="Enter your username"
+                  required
+                />
+              </div>
+
+              {!isLoginMode && (
+                <div>
+                  <label className="block text-[#5d4a37] font-medium mb-2">Email (optional)</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
+                    placeholder="Enter your email"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-[#5d4a37] font-medium mb-2">Password</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border border-[#dcc4a0] rounded-lg focus:outline-none focus:border-[#5d4a37] transition-colors text-[#5d4a37]"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+
+              <motion.button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 bg-[#5d4a37] text-white text-lg font-serif tracking-wider rounded-lg hover:bg-[#4a3a2a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={!isLoading ? { scale: 1.02 } : {}}
+                whileTap={!isLoading ? { scale: 0.98 } : {}}
+              >
+                {isLoading ? "Loading..." : (isLoginMode ? "Login" : "Register")}
+              </motion.button>
+            </form>
+
+            <div className="mt-6 text-center space-y-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLoginMode(!isLoginMode);
+                  clearError();
+                  setFormData({ username: "", password: "", email: "" });
+                }}
+                className="text-[#5d4a37] hover:text-[#4a3a2a] font-medium transition-colors"
+              >
+                {isLoginMode ? "Don't have an account? Register" : "Already have an account? Login"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAuthModal(false)}
+                className="text-[#8b7d6b] hover:text-[#5d4a37] font-medium transition-colors ml-6"
+              >
+                返回主页
+              </button>
             </div>
           </motion.div>
         </motion.div>

@@ -86,6 +86,43 @@ class SaveManagerService {
     if (!data) return null;
     return { version: data.version, timestamp: data.timestamp };
   }
+
+  async saveToServer(): Promise<boolean> {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    try {
+      const gameState = useGameStore.getState();
+      const progress = {
+        completedMissions: gameState.completedMissions,
+        mission2Started: gameState.mission2Started,
+        mission4Started: gameState.mission4Started,
+        lightingEventShown: gameState.lightingEventShown,
+        lightingToolsCollected: gameState.lightingToolsCollected,
+        lightingPrecautionShown: gameState.lightingPrecautionShown,
+        chapter1LetterPending: gameState.chapter1LetterPending,
+        chapter1LetterShown: gameState.chapter1LetterShown,
+        chapter2LetterPending: gameState.chapter2LetterPending,
+        chapter2LetterShown: gameState.chapter2LetterShown,
+        chapter3LetterPending: gameState.chapter3LetterPending,
+        chapter3LetterShown: gameState.chapter3LetterShown,
+        endingShown: gameState.endingShown,
+      };
+
+      const response = await fetch("/api/game-progress/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ progress }),
+      });
+
+      return response.ok;
+    } catch (error) {
+      console.error("Save to server error:", error);
+      return false;
+    }
+  }
 }
 
 export const saveManager = new SaveManagerService();

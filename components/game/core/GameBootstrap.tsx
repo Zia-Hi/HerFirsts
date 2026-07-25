@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LandingAnimationScene } from "@/components/game/scenes/LandingAnimationScene";
 import { GameHomepageScene } from "@/components/game/scenes/GameHomepageScene";
 import { OpeningScene } from "@/components/game/scenes/OpeningScene";
@@ -60,67 +60,75 @@ let scenesRegistered = false;
 let audioInitialized = false;
 
 export function GameBootstrap() {
+  const [isReady, setIsReady] = useState(false);
   const saveLoaded = useGameStore((s) => s.saveLoaded);
   const setSaveLoaded = useGameStore((s) => s.setSaveLoaded);
   const toggleDevMode = useGameStore((s) => s.toggleDevMode);
   const completeAllMissions = useGameStore((s) => s.completeAllMissions);
   const { transitionToScene } = useSceneTransition();
 
-  useAutoSave(saveLoaded);
+  useAutoSave(saveLoaded && isReady);
 
   useEffect(() => {
-    if (!scenesRegistered) {
-      registerAllScenes();
-      scenesRegistered = true;
-    }
-
-    saveManager.clear();
-    localStorage.removeItem(GAME_STORAGE_KEY);
-    
-    const savedData = saveManager.load();
-    if (savedData) {
-      saveManager.applySave(savedData);
-      console.log("📂 Save data loaded successfully");
-    }
-    setSaveLoaded(true);
-    void transitionToScene(SCENE_IDS.LANDING_ANIMATION);
-
-    const handleInteraction = () => {
-      if (!audioInitialized) {
-        audioManager.initialize();
-        audioInitialized = true;
+    // Delay initialization to ensure layout router is mounted
+    const timer = setTimeout(() => {
+      if (!scenesRegistered) {
+        registerAllScenes();
+        scenesRegistered = true;
       }
-    };
 
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && e.shiftKey) {
-        e.preventDefault();
-        saveManager.clear();
-        localStorage.removeItem(GAME_STORAGE_KEY);
-        window.location.reload();
-      }
+      saveManager.clear();
+      localStorage.removeItem(GAME_STORAGE_KEY);
       
-      if (e.key === "`" && e.altKey) {
-        e.preventDefault();
-        toggleDevMode();
+      const savedData = saveManager.load();
+      if (savedData) {
+        saveManager.applySave(savedData);
+        console.log("📂 Save data loaded successfully");
       }
-      
-      if (e.key === "0" && e.altKey) {
-        e.preventDefault();
-        completeAllMissions();
-        console.log("🎯 All missions completed!");
-      }
-      
-      handleInteraction();
-    };
+      setSaveLoaded(true);
+      setIsReady(true);
+      void transitionToScene(SCENE_IDS.LANDING_ANIMATION);
 
-    window.addEventListener("click", handleInteraction);
-    window.addEventListener("keydown", handleKeydown);
+      const handleInteraction = () => {
+        if (!audioInitialized) {
+          audioManager.initialize();
+          audioInitialized = true;
+        }
+      };
 
-    return () => {
-      window.removeEventListener("click", handleInteraction);
-      window.removeEventListener("keydown", handleKeydown);
-    };
+      const handleKeydown = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && e.shiftKey) {
+          e.preventDefault();
+          saveManager.clear();
+          localStorage.removeItem(GAME_STORAGE_KEY);
+          window.location.reload();
+        }
+        
+        if (e.key === "`" && e.altKey) {
+          e.preventDefault();
+          toggleDevMode();
+        }
+        
+        if (e.key === "0" && e.altKey) {
+          e.preventDefault();
+          completeAllMissions();
+          console.log("🎯 All missions completed!");
+        }
+        
+        handleInteraction();
+      };
+
+      window.addEventListener("click", handleInteraction);
+      window.addEventListener("keydown", handleKeydown);
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("click", handleInteraction);
+        window.removeEventListener("keydown", handleKeydown);
+      };
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [setSaveLoaded, transitionToScene, toggleDevMode, completeAllMissions]);
 
   return null;

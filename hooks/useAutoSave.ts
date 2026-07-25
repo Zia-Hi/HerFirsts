@@ -13,6 +13,7 @@ export function useAutoSave(enabled = true) {
 
     timeoutRef.current = setInterval(() => {
       saveManager.save();
+      void saveManager.saveToServer();
     }, AUTO_SAVE_INTERVAL_MS);
 
     return () => {
@@ -25,6 +26,7 @@ export function useAutoSave(enabled = true) {
 
     const handleBeforeUnload = () => {
       saveManager.save();
+      void saveManager.saveToServer();
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
