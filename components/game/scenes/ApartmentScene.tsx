@@ -548,7 +548,7 @@ export function ApartmentScene() {
           </svg>
         </div>
         <span className="font-game-sans mt-1 block text-center text-[10px] uppercase tracking-widest text-cream-100 opacity-90">
-          关卡
+          Tasks
         </span>
       </motion.button>
 
