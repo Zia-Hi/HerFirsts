@@ -183,7 +183,7 @@ class AudioManagerService {
 
       this.bgmLoading = true;
 
-      const audio = new Audio("/audio/music.mp4");
+      const audio = new Audio("/images/new_music.mp4");
       audio.preload = "auto";
       audio.crossOrigin = "anonymous";
 
